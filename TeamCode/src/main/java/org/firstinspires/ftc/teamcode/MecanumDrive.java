@@ -1,8 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
@@ -18,13 +19,11 @@ public class MecanumDrive {
     private double backLeftPower;
     private double backRightPower;
 
-    public MecanumDrive(String frontLeftDrive, String frontRightDrive, String backLeftDrive, String backRightDrive) {
-
-        this.frontLeftDrive = hardwareMap.get(DcMotor.class, frontLeftDrive);
-        this.frontRightDrive = hardwareMap.get(DcMotor.class, frontRightDrive);
-        this.backLeftDrive = hardwareMap.get(DcMotor.class, backLeftDrive);
-        this.backRightDrive = hardwareMap.get(DcMotor.class, backRightDrive);
-
+    public MecanumDrive(DcMotor frontLeftDrive, DcMotor frontRightDrive, DcMotor backLeftDrive, DcMotor backRightDrive) {
+        this.frontLeftDrive = frontLeftDrive;
+        this.frontRightDrive = frontRightDrive;
+        this.backLeftDrive = backLeftDrive;
+        this.backRightDrive = backRightDrive;
     }
 
     public void robotCentricDrive() {
