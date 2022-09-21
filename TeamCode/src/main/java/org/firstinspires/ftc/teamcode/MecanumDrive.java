@@ -1,33 +1,40 @@
 package org.firstinspires.ftc.teamcode;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorImpl;
 import com.qualcomm.robotcore.util.Range;
 
 public class MecanumDrive {
-    private final DcMotor frontLeftDrive;
-    private final DcMotor frontRightDrive;
-    private final DcMotor backLeftDrive;
-    private final DcMotor backRightDrive;
+    //Motor Variables
+    private DcMotor frontLeftDrive;
+    private DcMotor frontRightDrive;
+    private DcMotor backLeftDrive;
+    private DcMotor backRightDrive;
+    //Power Variables
+    private double frontLeftPower;
+    private double frontRightPower;
+    private double backLeftPower;
+    private double backRightPower;
 
-    private double frontRightBackLeftPower;
-    private double frontLeftBackRightPower;
+    public MecanumDrive(String frontLeftDrive, String frontRightDrive, String backLeftDrive, String backRightDrive) {
 
-    public MecanumDrive(DcMotor frontLeftDrive, DcMotor frontRightDrive, DcMotor backLeftDrive, DcMotor backRightDrive) {
-        this.frontLeftDrive = frontLeftDrive;
-        this.frontRightDrive = frontRightDrive;
-        this.backLeftDrive = backLeftDrive;
-        this.backRightDrive = backRightDrive;
+        this.frontLeftDrive = hardwareMap.get(DcMotor.class, frontLeftDrive);
+        this.frontRightDrive = hardwareMap.get(DcMotor.class, frontRightDrive);
+        this.backLeftDrive = hardwareMap.get(DcMotor.class, backLeftDrive);
+        this.backRightDrive = hardwareMap.get(DcMotor.class, backRightDrive);
+
     }
 
-    public void robotCentric() {
-        frontRightBackLeftPower = Range.clip(Math.sin(Math.atan(gamepad1.left_stick_y/gamepad1.left_stick_x)-0.25*Math.PI)*Math.sqrt(Math.pow(gamepad1.left_stick_x, 2) + Math.pow(gamepad1.left_stick_y, 2)), -1.0, 1.0);
-        frontLeftBackRightPower = Range.clip(Math.sin(Math.atan(gamepad1.left_stick_y/gamepad1.left_stick_x)+0.25*Math.PI)*Math.sqrt(Math.pow(gamepad1.left_stick_x, 2) + Math.pow(gamepad1.left_stick_y, 2)), -1.0, 1.0);
+    public void robotCentricDrive() {
 
-        frontLeftDrive.setPower(-frontLeftBackRightPower);
-        frontRightDrive.setPower(frontRightBackLeftPower);
-        backLeftDrive.setPower(-frontRightBackLeftPower);
-        backRightDrive.setPower(frontLeftBackRightPower);
     }
+
+    public void fieldCentricDrive() {
+
+    }
+
 }
+
