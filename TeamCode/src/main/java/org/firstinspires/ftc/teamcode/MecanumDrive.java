@@ -37,7 +37,7 @@ public class MecanumDrive {
         double joystickMagnitude;
 
         //Use joystick data to get vector of joystick
-        joystickAngle = Math.atan(gamepad1.left_stick_y/gamepad1.left_stick_x);
+        joystickAngle = gamepad1.left_stick_x < 0 ? Math.atan(gamepad1.left_stick_y/gamepad1.left_stick_x) + Math.PI : Math.atan(gamepad1.left_stick_y/gamepad1.left_stick_x);
         joystickMagnitude = Math.sqrt(Math.pow(gamepad1.left_stick_y, 2) + Math.pow(gamepad1.left_stick_x, 2));
 
         //Mecanum math, joystick angle and magnitude --> motor power
