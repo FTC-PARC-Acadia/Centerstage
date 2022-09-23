@@ -1,11 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 public class MecanumDrive {
@@ -35,29 +31,22 @@ public class MecanumDrive {
     public void robotCentricDrive() {
         double joystickAngle;
         double joystickMagnitude;
-        double power;
 
         //Use joystick data to get vector of joystick
         joystickAngle = gamepad1.left_stick_x < 0 ? Math.atan(gamepad1.left_stick_y/gamepad1.left_stick_x) + Math.PI : Math.atan(gamepad1.left_stick_y/gamepad1.left_stick_x);
         joystickMagnitude = Math.sqrt(Math.pow(gamepad1.left_stick_y, 2) + Math.pow(gamepad1.left_stick_x, 2));
-        power = Math.sin(joystickAngle) - Math.cos(joystickAngle) * joystickMagnitude;
 
         //Mecanum math, joystick angle and magnitude --> motor power
-//        frontLeftPower = Range.clip((Math.sin(joystickAngle + Math.PI/4) * joystickMagnitude), -1, 1);
-//        backRightPower = Range.clip(-(Math.sin(joystickAngle + Math.PI/4) * joystickMagnitude), -1, 1);
-//        frontRightPower = Range.clip(-(Math.sin(joystickAngle - Math.PI/4) * joystickMagnitude), -1, 1);
-//        backLeftPower = Range.clip((Math.sin(joystickAngle - Math.PI/4) * joystickMagnitude), -1, 1);
-
-        frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
-        frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
-        backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
-        backRightDrive.setDirection(DcMotor.Direction.FORWARD);
+        frontLeftPower = Range.clip((Math.sin(joystickAngle) * joystickMagnitude) - Math.cos(joystickAngle) * joystickMagnitude, -1, 1);
+        backRightPower = Range.clip(-(Math.sin(joystickAngle) * joystickMagnitude - Math.cos(joystickAngle) * joystickMagnitude), -1, 1);
+        frontRightPower = Range.clip(-(Math.sin(joystickAngle) * joystickMagnitude) - Math.cos(joystickAngle) * joystickMagnitude, -1, 1);
+        backLeftPower = Range.clip(-(-Math.sin(joystickAngle) * joystickMagnitude - Math.cos(joystickAngle) * joystickMagnitude), -1, 1);
 
         //Set motor power
-        frontLeftDrive.setPower(power);
-        frontRightDrive.setPower(-power);
-        backLeftDrive.setPower(-power);
-        backRightDrive.setPower(power);
+        frontLeftDrive.setPower(frontLeftPower);
+        frontRightDrive.setPower(frontRightPower);
+        backLeftDrive.setPower(backLeftPower);
+        backRightDrive.setPower(backRightPower);
     }
 
     public void fieldCentricDrive() {
