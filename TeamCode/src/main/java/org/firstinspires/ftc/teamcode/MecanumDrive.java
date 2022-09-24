@@ -48,16 +48,36 @@ public class MecanumDrive {
         double joystickMagnitude;
         double turn;
 
-        //Use joystick data to get vector of joystick
-        joystickAngle = gamepad1.left_stick_x < 0 ? Math.atan(gamepad1.left_stick_y/gamepad1.left_stick_x) + Math.PI : Math.atan(gamepad1.left_stick_y/gamepad1.left_stick_x);
+        //Calculating angle of joystick vector
+        if (gamepad1.left_stick_x < 0) {
+            if (gamepad1.left_stick_y < 0) {
+                joystickAngle = Math.atan(gamepad1.left_stick_y/gamepad1.left_stick_x) + Math.PI/2;
+            } else {
+                joystickAngle = Math.atan(gamepad1.left_stick_y/gamepad1.left_stick_x) + Math.PI;
+            }
+        } else {
+            if (gamepad1.left_stick_y < 0) {
+                joystickAngle = Math.atan(gamepad1.left_stick_y/gamepad1.left_stick_x) + Math.PI;
+            } else {
+                joystickAngle = Math.atan(gamepad1.left_stick_y/gamepad1.left_stick_x);
+            }
+        }
+
+        //Calculating magnitude of joystick vector
         joystickMagnitude = Math.sqrt(Math.pow(gamepad1.left_stick_y, 2) + Math.pow(gamepad1.left_stick_x, 2));
         turn = gamepad2.right_stick_x;
 
         //Mecanum math, joystick angle and magnitude --> motor power
-        frontLeftPower = Range.clip((Math.sin(joystickAngle) * joystickMagnitude) - Math.cos(joystickAngle) * joystickMagnitude, -1, 1);
-        backRightPower = Range.clip(-(Math.sin(joystickAngle) * joystickMagnitude - Math.cos(joystickAngle) * joystickMagnitude), -1, 1);
-        frontRightPower = Range.clip(-(Math.sin(joystickAngle) * joystickMagnitude) - Math.cos(joystickAngle) * joystickMagnitude, -1, 1);
-        backLeftPower = Range.clip(-(-Math.sin(joystickAngle) * joystickMagnitude - Math.cos(joystickAngle) * joystickMagnitude), -1, 1);
+//        frontLeftPower = Range.clip((Math.sin(joystickAngle) * joystickMagnitude) - Math.cos(joystickAngle) * joystickMagnitude, -1, 1);
+//        backRightPower = Range.clip(-(Math.sin(joystickAngle) * joystickMagnitude - Math.cos(joystickAngle) * joystickMagnitude), -1, 1);
+//        frontRightPower = Range.clip(-(Math.sin(joystickAngle) * joystickMagnitude) - Math.cos(joystickAngle) * joystickMagnitude, -1, 1);
+//        backLeftPower = Range.clip(-(-Math.sin(joystickAngle) * joystickMagnitude - Math.cos(joystickAngle) * joystickMagnitude), -1, 1);
+
+        frontLeftPower = Range.clip((Math.sin(joystickAngle + Math.PI/4) * joystickMagnitude), -1, 1);
+        backRightPower = Range.clip(-(Math.sin(joystickAngle + Math.PI/4) * joystickMagnitude), -1, 1);
+        frontRightPower = Range.clip(-(Math.sin(joystickAngle - Math.PI/4) * joystickMagnitude), -1, 1);
+        backLeftPower = Range.clip((Math.sin(joystickAngle - Math.PI/4) * joystickMagnitude), -1, 1);
+
 
         //set turn values
         frontLeftTurnValue = Range.clip((Math.sin(joystickAngle) * joystickMagnitude) - Math.cos(joystickAngle) * joystickMagnitude, -1, 1);
