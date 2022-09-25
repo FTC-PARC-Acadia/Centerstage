@@ -10,15 +10,8 @@ public class MecanumDrive {
     private DcMotor frontRightDrive;
     private DcMotor backLeftDrive;
     private DcMotor backRightDrive;
-
-    //Turn Variables
-    private DcMotor frontLeftTurn;
-    private DcMotor frontRightTurn;
-    private DcMotor backLeftTurn;
-    private DcMotor backRightTurn;
-
+    
     private Gamepad gamepad1;
-    private Gamepad gamepad2;
 
     //Power Variables
     private double frontLeftPower;
@@ -26,11 +19,6 @@ public class MecanumDrive {
     private double backLeftPower;
     private double backRightPower;
 
-    //More turn variables
-    private double frontLeftTurnValue;
-    private double frontRightTurnValue;
-    private double backLeftTurnValue;
-    private double backRightTurnValue;
 
 
     public MecanumDrive(DcMotor frontLeftDrive, DcMotor frontRightDrive, DcMotor backLeftDrive, DcMotor backRightDrive, Gamepad gamepad1) {
