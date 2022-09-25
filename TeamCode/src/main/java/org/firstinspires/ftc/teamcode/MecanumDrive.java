@@ -7,6 +7,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 public class MecanumDrive {
@@ -38,6 +41,9 @@ public class MecanumDrive {
 
         //Should pass this through from main class.
         this.imu = imu;
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        imu.initialize(parameters);
     }
 
     public void robotCentricDrive() {
@@ -60,18 +66,16 @@ public class MecanumDrive {
         double turn;
         double newAngle;
 
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        imu.initialize(parameters);
+        orientation = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
 
         //Calculating magnitude of joystick vector
         joystickAngle = gamepad1.left_stick_x < 0 ? Math.atan(gamepad1.left_stick_y/gamepad1.left_stick_x) + Math.PI : Math.atan(gamepad1.left_stick_y/gamepad1.left_stick_x);
         joystickMagnitude = Math.sqrt(Math.pow(gamepad1.left_stick_y, 2) + Math.pow(gamepad1.left_stick_x, 2));
         turn = gamepad1.right_stick_x;
 
+        newAngle = joystickAngle - orientation.thirdAngle;
 
-
-        drive(joystickAngle, joystickMagnitude, turn);
+        drive(newAngle, joystickMagnitude, turn);
     }
 
     public void drive(double joystickAngle, double joystickMagnitude, double turn)
