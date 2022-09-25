@@ -27,6 +27,11 @@ public class MecanumDrive {
     private double backLeftPower;
     private double backRightPower;
 
+    //Joystick Variables
+    private double joystickAngle;
+    private double joystickMagnitude;
+    private double turn;
+
     //IMU Variables
     BNO055IMU imu;
     Orientation orientation;
@@ -47,44 +52,33 @@ public class MecanumDrive {
     }
 
     public void robotCentricDrive() {
-        double joystickAngle;
-        double joystickMagnitude;
-        double turn;
-
-        //Calculating magnitude of joystick vector
-        joystickAngle = gamepad1.left_stick_x < 0 ? Math.atan(gamepad1.left_stick_y/gamepad1.left_stick_x) + Math.PI : Math.atan(gamepad1.left_stick_y/gamepad1.left_stick_x);
-        joystickMagnitude = Math.sqrt(Math.pow(gamepad1.left_stick_y, 2) + Math.pow(gamepad1.left_stick_x, 2));
-        turn = gamepad1.right_stick_x;
-
-        drive(joystickAngle, joystickMagnitude, turn);
+        drive();
     }
 
     public void fieldCentricDrive() {
-        //I think we just add angle to the joystickAngle of robotCentricDrive
-        double joystickAngle;
-        double joystickMagnitude;
-        double turn;
-        double newAngle;
-
         orientation = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
 
-        //Calculating magnitude of joystick vector
+        joystickAngle =- orientation.thirdAngle;
+
+        drive();
+    }
+
+    public void drive()
+    {
+        //Vector Math
         joystickAngle = gamepad1.left_stick_x < 0 ? Math.atan(gamepad1.left_stick_y/gamepad1.left_stick_x) + Math.PI : Math.atan(gamepad1.left_stick_y/gamepad1.left_stick_x);
         joystickMagnitude = Math.sqrt(Math.pow(gamepad1.left_stick_y, 2) + Math.pow(gamepad1.left_stick_x, 2));
         turn = gamepad1.right_stick_x;
 
-        newAngle = joystickAngle - orientation.thirdAngle;
-
-        drive(newAngle, joystickMagnitude, turn);
-    }
-
-    public void drive(double joystickAngle, double joystickMagnitude, double turn)
-    {
         //Mecanum math, joystick angle and magnitude --> motor power
-        frontLeftPower = Range.clip((Math.sin(joystickAngle) * joystickMagnitude) - Math.cos(joystickAngle) * joystickMagnitude, -1, 1);
-        backRightPower = Range.clip(-(Math.sin(joystickAngle) * joystickMagnitude - Math.cos(joystickAngle) * joystickMagnitude + turn), -1, 1);
-        frontRightPower = Range.clip(-(Math.sin(joystickAngle) * joystickMagnitude) - Math.cos(joystickAngle) * joystickMagnitude, -1, 1);
-        backLeftPower = Range.clip(-(-Math.sin(joystickAngle) * joystickMagnitude - Math.cos(joystickAngle) * joystickMagnitude + turn), -1, 1);
+        double powerFrontLeftBackRight = (Math.sin(joystickAngle) - Math.cos(joystickAngle)) * joystickMagnitude;
+        double powerFrontRightBackLeft = (-Math.sin(joystickAngle) - Math.cos(joystickAngle)) * joystickMagnitude;
+
+        //Combining power and turn
+        frontLeftPower = Range.clip(powerFrontLeftBackRight, -1, 1);
+        backRightPower = Range.clip(-(powerFrontLeftBackRight + turn), -1, 1);
+        frontRightPower = Range.clip(powerFrontRightBackLeft, -1, 1);
+        backLeftPower = Range.clip(-(powerFrontRightBackLeft + turn), -1, 1);
 
         //Set motor power
         frontLeftDrive.setPower(frontLeftPower);
