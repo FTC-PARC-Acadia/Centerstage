@@ -29,7 +29,6 @@ public class MecanumDrive {
 
     //Joystick Variables
     private double joystickAngle;
-    private double driveAngle = 0;
     private double joystickMagnitude;
     private double turn;
 
@@ -53,20 +52,18 @@ public class MecanumDrive {
     }
 
     public void robotCentricDrive() {
-        drive();
+        drive(0);
     }
 
     public void fieldCentricDrive() {
         orientation = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
-        driveAngle = orientation.thirdAngle;
-
-        drive();
+        drive(orientation.thirdAngle);
     }
 
-    public void drive()
+    public void drive(double adjustmentAngle)
     {
         //Vector Math
-        joystickAngle = gamepad1.left_stick_x < 0 ? Math.atan(gamepad1.left_stick_y/gamepad1.left_stick_x) + Math.PI - driveAngle: Math.atan(gamepad1.left_stick_y/gamepad1.left_stick_x) - driveAngle;
+        joystickAngle = gamepad1.left_stick_x < 0 ? Math.atan(gamepad1.left_stick_y/gamepad1.left_stick_x) + Math.PI - adjustmentAngle: Math.atan(gamepad1.left_stick_y/gamepad1.left_stick_x) - adjustmentAngle;
         joystickMagnitude = Math.sqrt(Math.pow(gamepad1.left_stick_y, 2) + Math.pow(gamepad1.left_stick_x, 2));
         turn = gamepad1.right_stick_x;
 
