@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -43,9 +41,9 @@ public class MecanumDrive {
         this.backRightDrive = backRightDrive;
 
         this.gamepad1 = gamepad1;
-
-        //Should pass this through from main class.
+        
         this.imu = imu;
+
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         imu.initialize(parameters);
@@ -63,7 +61,8 @@ public class MecanumDrive {
     public void drive(double adjustmentAngle)
     {
         //Vector Math
-        joystickAngle = gamepad1.left_stick_x < 0 ? Math.atan(gamepad1.left_stick_y/gamepad1.left_stick_x) + Math.PI - adjustmentAngle: Math.atan(gamepad1.left_stick_y/gamepad1.left_stick_x) - adjustmentAngle;
+        joystickAngle = gamepad1.left_stick_x < 0 ? Math.atan(gamepad1.left_stick_y/gamepad1.left_stick_x) + Math.PI : Math.atan(gamepad1.left_stick_y/gamepad1.left_stick_x);
+        joystickAngle -= adjustmentAngle;
         joystickMagnitude = Math.sqrt(Math.pow(gamepad1.left_stick_y, 2) + Math.pow(gamepad1.left_stick_x, 2));
         turn = gamepad1.right_stick_x;
 
