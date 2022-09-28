@@ -75,9 +75,9 @@ public class MecanumDrive {
         double powerFrontRightBackLeft = (-Math.sin(joystickAngle) - Math.cos(joystickAngle)) * joystickMagnitude;
 
         //Combining power and turn
-        frontLeftPower = Range.clip(powerFrontLeftBackRight, -1, 1);
+        frontLeftPower = Range.clip(powerFrontLeftBackRight - turn, -1, 1);
         backRightPower = Range.clip(-(powerFrontLeftBackRight + turn), -1, 1);
-        frontRightPower = Range.clip(powerFrontRightBackLeft, -1, 1);
+        frontRightPower = Range.clip(powerFrontRightBackLeft - turn, -1, 1);
         backLeftPower = Range.clip(-(powerFrontRightBackLeft + turn), -1, 1);
 
         //Set motor power
