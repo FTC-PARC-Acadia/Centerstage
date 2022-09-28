@@ -30,6 +30,8 @@ public class MecanumDrive {
     private double joystickMagnitude;
     private double turn;
 
+    private float forwardAngle;
+
     //IMU Variables
     BNO055IMU imu;
     Orientation orientation;
@@ -47,6 +49,8 @@ public class MecanumDrive {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         imu.initialize(parameters);
+        orientation = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
+        forwardAngle = orientation.firstAngle;
     }
 
     public void robotCentricDrive() {
@@ -55,7 +59,7 @@ public class MecanumDrive {
 
     public void fieldCentricDrive() {
         orientation = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
-        drive(orientation.thirdAngle);
+        drive(forwardAngle - orientation.firstAngle);
     }
 
     public void drive(double adjustmentAngle)
