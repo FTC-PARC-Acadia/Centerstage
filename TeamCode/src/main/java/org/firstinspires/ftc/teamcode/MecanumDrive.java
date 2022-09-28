@@ -71,8 +71,17 @@ public class MecanumDrive {
         turn = gamepad1.right_stick_x;
 
         //Mecanum math, joystick angle and magnitude --> motor power
-        double powerFrontLeftBackRight = (Math.sin(joystickAngle) - Math.cos(joystickAngle)) * joystickMagnitude;
-        double powerFrontRightBackLeft = (-Math.sin(joystickAngle) - Math.cos(joystickAngle)) * joystickMagnitude;
+        Double powerFrontLeftBackRight = (Math.sin(joystickAngle) - Math.cos(joystickAngle)) * joystickMagnitude;
+        Double powerFrontRightBackLeft = (-Math.sin(joystickAngle) - Math.cos(joystickAngle)) * joystickMagnitude;
+
+        if (powerFrontLeftBackRight.isNaN())
+        {
+            powerFrontLeftBackRight = 0D;
+        }
+        if (powerFrontRightBackLeft.isNaN())
+        {
+            powerFrontRightBackLeft = 0D;
+        }
 
         //Combining power and turn
         frontLeftPower = Range.clip(powerFrontLeftBackRight - turn, -1, 1);
