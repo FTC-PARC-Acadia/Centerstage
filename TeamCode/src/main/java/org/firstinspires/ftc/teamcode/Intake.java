@@ -19,7 +19,7 @@ public class Intake extends MecanumDrive {
         this.servo = servo;
         this.gamepad2 = gamepad2;
 
-        position = 5;
+        position = 100;
     }
 
     public void lift() {
@@ -28,14 +28,10 @@ public class Intake extends MecanumDrive {
 
         if (gamepad2.right_bumper && lift.isBusy()) {
             lift.setPower(.5);
-        } else if (lift.isBusy()) {
+        } else if (gamepad2.right_trigger > 0 && lift.isBusy()) {
             lift.setPower(-.5);
         } else {
             position = -position;
         }
-    }
-
-    public void intake() {
-
     }
 }
