@@ -12,7 +12,7 @@ public class MecanumOpMode extends OpMode {
     Servo servo;
 
     public void init() {
-        drive = new Intake(hardwareMap.get(DcMotor.class, "frontLeftDrive"), hardwareMap.get(DcMotor.class, "frontRightDrive"), hardwareMap.get(DcMotor.class, "backLeftDrive"), hardwareMap.get(DcMotor.class, "backRightDrive"), hardwareMap.get(DcMotor.class, "frontLeftDrive"), servo, gamepad1, gamepad2, hardwareMap.get(BNO055IMU.class, "imu"));
+        drive = new Intake(hardwareMap.get(DcMotor.class, "frontLeftDrive"), hardwareMap.get(DcMotor.class, "frontRightDrive"), hardwareMap.get(DcMotor.class, "backLeftDrive"), hardwareMap.get(DcMotor.class, "backRightDrive"), hardwareMap.get(DcMotor.class, "lift"), servo, gamepad1, gamepad2, hardwareMap.get(BNO055IMU.class, "imu"));
     }
 
     public void loop() {
