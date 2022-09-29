@@ -16,6 +16,8 @@ public class Intake extends MecanumDrive {
         super(frontLeftDrive, frontRightDrive, backLeftDrive, backRightDrive, gamepad1, imu);
 
         this.lift = lift;
+        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         this.servo = servo;
         this.gamepad2 = gamepad2;
 
@@ -24,7 +26,6 @@ public class Intake extends MecanumDrive {
 
     public void lift() {
         lift.setTargetPosition(position);
-        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         if (gamepad2.right_bumper && lift.isBusy()) {
             lift.setPower(.5);
