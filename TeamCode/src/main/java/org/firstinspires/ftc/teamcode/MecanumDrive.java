@@ -82,6 +82,10 @@ public class MecanumDrive {
         {
             powerFrontRightBackLeft = 0D;
         }
+        if (gamepad1.x)
+        {
+            forwardAngle = orientation.firstAngle;
+        }
 
         //Combining power and turn
         frontLeftPower = Range.clip(powerFrontLeftBackRight - turn, -1, 1);
