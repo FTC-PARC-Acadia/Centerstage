@@ -16,7 +16,9 @@ public class Intake extends MecanumDrive {
         super(frontLeftDrive, frontRightDrive, backLeftDrive, backRightDrive, gamepad1, imu);
 
         this.lift = lift;
+        lift.setTargetPosition(position);
         lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         this.servo = servo;
         this.gamepad2 = gamepad2;
@@ -28,11 +30,16 @@ public class Intake extends MecanumDrive {
         lift.setTargetPosition(position);
 
         if (gamepad2.right_bumper && lift.isBusy()) {
+            lift.setTargetPosition(100);
             lift.setPower(.5);
         } else if (gamepad2.right_trigger > 0 && lift.isBusy()) {
+            lift.setTargetPosition(0);
             lift.setPower(-.5);
+        } else if (!lift.isBusy()) {
+            lift.setPower(0);
+            position = position == 100  ? 0 : 100;
         } else {
-            position = -position;
+            lift.setPower(0);
         }
     }
 }
