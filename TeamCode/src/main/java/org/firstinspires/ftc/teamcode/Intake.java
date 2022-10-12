@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -9,10 +10,10 @@ public class Intake extends MecanumDrive {
 
     private Gamepad gamepad2;
     private DcMotor lift;
-    private Servo servo;
+    private CRServo intake;
     private int position;
 
-    public Intake(DcMotor frontLeftDrive, DcMotor frontRightDrive, DcMotor backLeftDrive, DcMotor backRightDrive, DcMotor lift, Servo servo, Gamepad gamepad1, Gamepad gamepad2, BNO055IMU imu) {
+    public Intake(DcMotor frontLeftDrive, DcMotor frontRightDrive, DcMotor backLeftDrive, DcMotor backRightDrive, DcMotor lift, CRServo intake, Gamepad gamepad1, Gamepad gamepad2, BNO055IMU imu) {
         super(frontLeftDrive, frontRightDrive, backLeftDrive, backRightDrive, gamepad1, imu);
 
         this.lift = lift;
@@ -20,7 +21,7 @@ public class Intake extends MecanumDrive {
         lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        this.servo = servo;
+        this.intake = intake;
         this.gamepad2 = gamepad2;
 
         position = 100;
@@ -46,10 +47,13 @@ public class Intake extends MecanumDrive {
     public void intake(){
         //Spin the intake if button...
         if(gamepad2.left_bumper){
-            servo.setPosition(servo.getPosition() +.1);
+            intake.setPower(1);
         }
         else if(gamepad2.left_trigger > 0){
-            servo.setPosition(servo.getPosition() -.1);
+            intake.setPower(-1);
+        }
+        else{
+            intake.setPower(0);
         }
 
     }
