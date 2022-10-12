@@ -42,4 +42,15 @@ public class Intake extends MecanumDrive {
             lift.setPower(0);
         }
     }
+
+    public void intake(){
+        //Spin the intake if button...
+        if(gamepad2.left_bumper){
+            servo.setPosition(servo.getPosition() +.1);
+        }
+        else if(gamepad2.left_trigger > 0){
+            servo.setPosition(servo.getPosition() -.1);
+        }
+
+    }
 }
