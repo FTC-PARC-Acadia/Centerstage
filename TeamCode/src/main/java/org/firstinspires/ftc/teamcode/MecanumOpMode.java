@@ -19,5 +19,6 @@ public class MecanumOpMode extends OpMode {
     public void loop() {
         drive.fieldCentricDrive();
         drive.lift();
+        drive.intake();
     }
 }
