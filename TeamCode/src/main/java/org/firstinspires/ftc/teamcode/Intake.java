@@ -45,7 +45,6 @@ public class Intake extends MecanumDrive {
     }
 
     public void intake(){
-        //Spin the intake if button...
         if(gamepad2.left_bumper){
             intake.setPower(1);
         }
