@@ -1,27 +1,45 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.Servo;
 
 public class Robot implements Intake2, Lift {
+    final double max = 1;
+    final double min = .5;
+    
     static final double COUNTS_PER_MOTOR_REV = 537.7;
     static final double DRIVE_GEAR_REDUCTION = 1.0;
     static final double WHEEL_DIAMETER_INCHES = 1.5;
     static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * Math.PI);
 
-    private DcMotor liftMotor;
 
-    private Gamepad gamepad2;
+    Servo claw;
+    DcMotor lift;
+    Gamepad gamepad1;
+    Gamepad gamepad2;
 
-    public Robot(DcMotor liftMotor, Gamepad gamepad2) {
-        this.liftMotor = liftMotor;
+    public Robot(Gamepad gamepad1, Gamepad gamepad2,Servo claw, DcMotor lift) {
+        this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
-
-        liftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        this.lift = lift;
+        this.claw = claw;
+        
+        lift.setDirection(DcMotorSimple.Direction.FORWARD);
+        lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
+    public void grab(){
+        if(gamepad2.left_bumper) {
+            if(claw.getPosition() != max) {
+                claw.setPosition(max);
+            }
+            else {
+                claw.setPosition(min);
+            }
+        }
+    }
+    
     public void liftByLevel() {
         if (gamepad2.dpad_up) {
             encoderDrive(9, 1);
@@ -29,7 +47,7 @@ public class Robot implements Intake2, Lift {
             encoderDrive(9, -1);
         }
     }
-
+    
     public void liftByPush() {
 
     }
@@ -44,6 +62,5 @@ public class Robot implements Intake2, Lift {
         if (!liftMotor.isBusy()) {
             liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 //            liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        }
-    }
+    } 
 }
