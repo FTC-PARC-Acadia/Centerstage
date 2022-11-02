@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
-public class Robot implements Intake2, Lift {
+public class Robot implements Intake, Lift {
     final double max = 1;
     final double min = .5;
     
@@ -12,7 +12,6 @@ public class Robot implements Intake2, Lift {
     static final double DRIVE_GEAR_REDUCTION = 1.0;
     static final double WHEEL_DIAMETER_INCHES = 1.5;
     static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * Math.PI);
-
 
     Servo claw;
     DcMotor lift;
@@ -25,7 +24,7 @@ public class Robot implements Intake2, Lift {
         this.lift = lift;
         this.claw = claw;
         
-        lift.setDirection(DcMotorSimple.Direction.FORWARD);
+        lift.setDirection(DcMotor.Direction.FORWARD);
         lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
@@ -53,14 +52,15 @@ public class Robot implements Intake2, Lift {
     }
 
     public void encoderDrive(double inches, double speed) {
-        int target = (int) ((inches * COUNTS_PER_INCH) - liftMotor.getCurrentPosition());
+        int target = (int) ((inches * COUNTS_PER_INCH) - lift.getCurrentPosition());
 
-        liftMotor.setTargetPosition(target);
-        liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        liftMotor.setPower(speed);
+        lift.setTargetPosition(target);
+        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        lift.setPower(speed);
 
-        if (!liftMotor.isBusy()) {
-            liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        if (!lift.isBusy()) {
+            lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 //            liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
     } 
 }

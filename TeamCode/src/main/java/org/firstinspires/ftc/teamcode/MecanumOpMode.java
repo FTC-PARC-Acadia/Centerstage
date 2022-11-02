@@ -10,7 +10,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 @TeleOp(name = "MecanumOpMode", group = "TeleOpModes")
 public class MecanumOpMode extends OpMode {
     MecanumDrive drive;
-    Servo intake;
 
     public void init() {
         drive = new MecanumDrive(gamepad1, gamepad2, hardwareMap.get(Servo.class, "intake"), hardwareMap.get(DcMotor.class, "lift"), hardwareMap.get(DcMotor.class, "frontLeftDrive"), hardwareMap.get(DcMotor.class, "frontRightDrive"), hardwareMap.get(DcMotor.class, "backLeftDrive"), hardwareMap.get(DcMotor.class, "backRightDrive"), hardwareMap.get(BNO055IMU.class, "imu"));
@@ -19,5 +18,6 @@ public class MecanumOpMode extends OpMode {
     public void loop() {
         drive.fieldCentricDrive();
         drive.grab();
+        drive.liftByLevel();
     }
 }
