@@ -21,7 +21,7 @@ public class Robot implements Intake2, Lift {
     }
 
     public void grab(){
-        if(gamepad1.left_bumper) {
+        if(gamepad2.left_bumper) {
             if(claw.getPosition() != max) {
                 claw.setPosition(max);
             }
@@ -30,6 +30,4 @@ public class Robot implements Intake2, Lift {
             }
         }
     }
-
-
 }
