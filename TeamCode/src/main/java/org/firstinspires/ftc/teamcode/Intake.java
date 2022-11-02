@@ -14,7 +14,7 @@ public class Intake extends MecanumDrive {
     private int position;
 
     public Intake(DcMotor frontLeftDrive, DcMotor frontRightDrive, DcMotor backLeftDrive, DcMotor backRightDrive, DcMotor lift, CRServo intake, Gamepad gamepad1, Gamepad gamepad2, BNO055IMU imu) {
-        super(frontLeftDrive, frontRightDrive, backLeftDrive, backRightDrive, gamepad1, imu);
+        super();
 
         this.lift = lift;
         lift.setTargetPosition(position);
