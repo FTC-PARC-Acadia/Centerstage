@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-public class MecanumDrive {
+public class MecanumDrive extends Robot {
     //Motor Variables
     private DcMotor frontLeftDrive;
     private DcMotor frontRightDrive;
