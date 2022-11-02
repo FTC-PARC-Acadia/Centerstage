@@ -7,6 +7,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Robot implements Intake2, Lift {
     final double max = 1;
     final double min = .5;
+    
+    static final double COUNTS_PER_MOTOR_REV = 537.7;
+    static final double DRIVE_GEAR_REDUCTION = 1.0;
+    static final double WHEEL_DIAMETER_INCHES = 1.5;
+    static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * Math.PI);
+
 
     Servo claw;
     DcMotor lift;
@@ -18,6 +24,9 @@ public class Robot implements Intake2, Lift {
         this.gamepad2 = gamepad2;
         this.lift = lift;
         this.claw = claw;
+        
+        lift.setDirection(DcMotorSimple.Direction.FORWARD);
+        lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public void grab(){
@@ -30,4 +39,28 @@ public class Robot implements Intake2, Lift {
             }
         }
     }
+    
+    public void liftByLevel() {
+        if (gamepad2.dpad_up) {
+            encoderDrive(9, 1);
+        } else if (gamepad2.dpad_down) {
+            encoderDrive(9, -1);
+        }
+    }
+    
+    public void liftByPush() {
+
+    }
+
+    public void encoderDrive(double inches, double speed) {
+        int target = (int) ((inches * COUNTS_PER_INCH) - liftMotor.getCurrentPosition());
+
+        liftMotor.setTargetPosition(target);
+        liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        liftMotor.setPower(speed);
+
+        if (!liftMotor.isBusy()) {
+            liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//            liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    } 
 }
