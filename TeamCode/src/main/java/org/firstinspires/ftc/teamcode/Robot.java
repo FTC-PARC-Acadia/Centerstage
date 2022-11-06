@@ -1,72 +1,25 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
-public class Robot implements Intake, Lift {
-    final double max = 1;
-    final double min = .5;
+public class Robot {
+
+    Intake intake;
+    Lift lift;
+    MecanumDrive drive;
     
-    static final double COUNTS_PER_MOTOR_REV = 537.7;
-    static final double DRIVE_GEAR_REDUCTION = 1.0;
-    static final double WHEEL_DIAMETER_INCHES = 1.5;
-    static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * Math.PI);
-
-    Servo claw;
-    DcMotor lift;
-    Gamepad gamepad1;
-    Gamepad gamepad2;
-
-    public Robot(Gamepad gamepad1, Gamepad gamepad2,Servo claw, DcMotor lift) {
-        this.gamepad1 = gamepad1;
-        this.gamepad2 = gamepad2;
-        this.lift = lift;
-        this.claw = claw;
-        
-        lift.setDirection(DcMotor.Direction.REVERSE);
-        lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
-
-    public void grab(){
-        if(gamepad2.left_bumper) {
-            if(claw.getPosition() != max) {
-                claw.setPosition(max);
-            }
-            else {
-                claw.setPosition(min);
-            }
-        }
+    public Robot(Gamepad gamepad1, Gamepad gamepad2, Servo claw, DcMotor lift, DcMotor frontLeftDrive, DcMotor backLeftDrive, DcMotor frontRightDrive, DcMotor backRightDrive, BNO055IMU imu) {
+        intake = new Intake(gamepad2, claw);
+        this.lift = new Lift(gamepad2, lift);
+        drive = new MecanumDrive(gamepad1, frontLeftDrive, frontRightDrive, backLeftDrive, backRightDrive, imu);
     }
     
-    public void liftByLevel() {
-        if (gamepad2.dpad_up) {
-            encoderDrive(9, 0.1);
-        } else if (gamepad2.dpad_down) {
-            encoderDrive(9, -0.1);
-        }
+    public void run() {
+        drive.fieldCentricDrive();
+        intake.grab();
+        lift.liftByLevel();
     }
-    
-    public void liftByPush() {
-        if (gamepad2.right_bumper) {
-            encoderDrive(1, 0.1);
-        } else {
-            lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            lift.setPower(0);
-        }
-    }
-
-    public void encoderDrive(double inches, double speed) {
-        int target = (int) ((inches * COUNTS_PER_INCH) - lift.getCurrentPosition());
-
-        lift.setTargetPosition(target);
-        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        lift.setPower(speed);
-
-        if (!lift.isBusy()) {
-            lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//            liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        }
-    } 
 }

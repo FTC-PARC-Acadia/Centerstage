@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -11,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-public class MecanumDrive extends Robot {
+public class MecanumDrive {
     //Motor Variables
     private DcMotor frontLeftDrive;
     private DcMotor frontRightDrive;
@@ -37,9 +36,7 @@ public class MecanumDrive extends Robot {
     BNO055IMU imu;
     Orientation orientation;
 
-    public MecanumDrive(Gamepad gamepad1, Gamepad gamepad2, Servo claw, DcMotor lift, DcMotor frontLeftDrive, DcMotor frontRightDrive, DcMotor backLeftDrive, DcMotor backRightDrive, BNO055IMU imu) {
-        super(gamepad1, gamepad2, claw, lift);
-
+    public MecanumDrive(Gamepad gamepad1, DcMotor frontLeftDrive, DcMotor frontRightDrive, DcMotor backLeftDrive, DcMotor backRightDrive, BNO055IMU imu) {
         this.frontLeftDrive = frontLeftDrive;
         this.frontRightDrive = frontRightDrive;
         this.backLeftDrive = backLeftDrive;
@@ -55,27 +52,7 @@ public class MecanumDrive extends Robot {
         orientation = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
         forwardAngle = orientation.firstAngle;
     }
-
-    /*public MecanumDrive(DcMotor frontLeftDrive, DcMotor frontRightDrive, DcMotor backLeftDrive, DcMotor backRightDrive, Gamepad gamepad1, BNO055IMU imu) {
-        super();
-        this.frontLeftDrive = frontLeftDrive;
-        this.frontRightDrive = frontRightDrive;
-        this.backLeftDrive = backLeftDrive;
-        this.backRightDrive = backRightDrive;
-
-        this.gamepad1 = gamepad1;
-        
-        this.imu = imu;
-
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        imu.initialize(parameters);
-        orientation = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
-        forwardAngle = orientation.firstAngle;
-    }*/
-
-
-
+    
     public void robotCentricDrive() {
         drive(0);
     }
