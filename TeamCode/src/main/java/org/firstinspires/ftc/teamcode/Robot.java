@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -24,7 +25,7 @@ public class Robot implements Intake, Lift {
         this.lift = lift;
         this.claw = claw;
         
-        lift.setDirection(DcMotor.Direction.FORWARD);
+        lift.setDirection(DcMotor.Direction.REVERSE);
         lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
@@ -41,14 +42,19 @@ public class Robot implements Intake, Lift {
     
     public void liftByLevel() {
         if (gamepad2.dpad_up) {
-            encoderDrive(9, 1);
+            encoderDrive(9, 0.1);
         } else if (gamepad2.dpad_down) {
-            encoderDrive(9, -1);
+            encoderDrive(9, -0.1);
         }
     }
     
     public void liftByPush() {
-
+        if (gamepad2.right_bumper) {
+            encoderDrive(1, 0.1);
+        } else {
+            lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            lift.setPower(0);
+        }
     }
 
     public void encoderDrive(double inches, double speed) {
