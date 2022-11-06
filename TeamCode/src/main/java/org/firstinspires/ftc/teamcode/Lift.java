@@ -12,41 +12,46 @@ public class Lift {
     Gamepad gamepad2;
     DcMotor lift;
 
+    private int pos = 0;
+
     public Lift(Gamepad gamepad2, DcMotor lift) {
         this.gamepad2 = gamepad2;
         this.lift = lift;
 
         lift.setDirection(DcMotor.Direction.REVERSE);
-        lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lift.setTargetPosition(0);
+        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     public void liftByLevel() {
-        if (gamepad2.dpad_up) {
-            encoderDrive(9, 0.1);
-        } else if (gamepad2.dpad_down) {
-            encoderDrive(9, -0.1);
+        int level = pos / 1250;
+        if (gamepad2.dpad_up && (level < 4) && lift.getCurrentPosition() >= pos - 100) {
+            pos += 1250;
+            lift.setTargetPosition(pos);
+            lift.setPower(0.5);
+        } else if (gamepad2.dpad_down && (level > 0) && lift.getCurrentPosition() <= pos + 100) {
+            pos -= 1250;
+            lift.setTargetPosition(pos);
+            lift.setPower(-0.5);
+            }
         }
-    }
 
     public void liftByPush() {
-        if (gamepad2.right_bumper) {
-            encoderDrive(1, 0.1);
-        } else {
-            lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        if (gamepad2.right_bumper && pos < 4000) {
+            pos += 50;
+            lift.setTargetPosition(pos);
+            lift.setPower(1);
+        } else if (gamepad2.right_trigger > 0 && pos > 50) {
+            pos -= 50;
+            lift.setTargetPosition(pos);
+            lift.setPower(1);
+        }
+
+        if (!lift.isBusy()) {
             lift.setPower(0);
         }
     }
 
-    public void encoderDrive(double inches, double speed) {
-        int target = (int) ((inches * COUNTS_PER_INCH) - lift.getCurrentPosition());
-
-        lift.setTargetPosition(target);
-        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        lift.setPower(speed);
-
-        if (!lift.isBusy()) {
-            lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//            liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        }
-    }
 }

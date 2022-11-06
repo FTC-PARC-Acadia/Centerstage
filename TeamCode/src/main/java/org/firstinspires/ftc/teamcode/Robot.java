@@ -21,5 +21,6 @@ public class Robot {
         drive.fieldCentricDrive();
         intake.grab();
         lift.liftByLevel();
+        lift.liftByPush();
     }
 }
