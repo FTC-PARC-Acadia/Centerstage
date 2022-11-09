@@ -22,5 +22,6 @@ public class Robot {
         intake.grab();
         lift.liftByLevel();
         lift.liftByPush();
+        lift.adjust();
     }
 }
