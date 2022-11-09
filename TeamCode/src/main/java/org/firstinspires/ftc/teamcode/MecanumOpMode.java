@@ -16,5 +16,6 @@ public class MecanumOpMode extends OpMode {
 
     public void loop() {
        robot.run();
+       telemetry.addData("Servo Position", "%5.2f", robot.intake.claw.getPosition());
     }
 }
