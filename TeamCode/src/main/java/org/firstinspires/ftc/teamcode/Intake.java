@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class Intake {
-    static final double MIN = 0.03;
+    static final double MIN = 0.02;
     static final double MAX = 0.08;
 
     Gamepad gamepad2;
