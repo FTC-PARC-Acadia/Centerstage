@@ -16,6 +16,10 @@ public class Intake {
         this.gamepad2 = gamepad2;
         this.claw = claw;
     }
+
+    public Intake(Servo claw) {
+        this.claw = claw;
+    }
     
     public void grab(){
         if(gamepad2.left_trigger > 0 && claw.getPosition() < MAX) {
@@ -25,5 +29,14 @@ public class Intake {
         }
 
         claw.setPosition(position);
+    }
+
+    public void grasp(boolean open) {
+        if (open) {
+            position += 0.01;
+        }
+        else {
+            position -= 0.01;
+        }
     }
 }

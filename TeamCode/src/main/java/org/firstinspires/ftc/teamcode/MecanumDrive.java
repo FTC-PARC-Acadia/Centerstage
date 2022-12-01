@@ -11,6 +11,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 public class MecanumDrive {
+    //312 rpm motor
+    public static final double STEP_PER_INCH = 45.285;
+
     //Motor Variables
     private DcMotor frontLeftDrive;
     private DcMotor frontRightDrive;
@@ -57,7 +60,64 @@ public class MecanumDrive {
         backLeftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
-    
+
+    public MecanumDrive(DcMotor frontLeftDrive, DcMotor frontRightDrive, DcMotor backLeftDrive, DcMotor backRightDrive) {
+        this.frontLeftDrive = frontLeftDrive;
+        this.frontRightDrive = frontRightDrive;
+        this.backLeftDrive = backLeftDrive;
+        this.backRightDrive = backRightDrive;
+
+        frontLeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontLeftDrive.setTargetPosition(0);
+        frontLeftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        frontLeftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
+
+    public void move(Direction dir, int inches) {
+        double powerFrontLeftBackRight = 0;
+        double powerFrontRightBackLeft = 0;
+
+        switch(dir) {
+            case FORWARD:
+                powerFrontLeftBackRight = 1;
+                powerFrontRightBackLeft = 1;
+                break;
+
+            case BACKWARD:
+                powerFrontLeftBackRight = -1;
+                powerFrontRightBackLeft = -1;
+                break;
+
+            case RIGHT:
+                powerFrontLeftBackRight = 1;
+                powerFrontRightBackLeft = -1;
+                break;
+
+            case LEFT:
+                powerFrontLeftBackRight = -1;
+                powerFrontRightBackLeft = 1;
+                break;
+        }
+
+        frontLeftDrive.setTargetPosition((int)(inches*STEP_PER_INCH));
+
+        frontLeftDrive.setPower(powerFrontLeftBackRight);
+        frontRightDrive.setPower(powerFrontRightBackLeft);
+        backLeftDrive.setPower(powerFrontRightBackLeft);
+        backRightDrive.setPower(powerFrontLeftBackRight);
+
+        if (!frontLeftDrive.isBusy()) {
+            frontLeftDrive.setPower(0);
+            frontRightDrive.setPower(0);
+            backLeftDrive.setPower(0);
+            backRightDrive.setPower(0);
+        }
+    }
+
     public void robotCentricDrive() {
         drive(0);
     }

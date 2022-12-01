@@ -20,6 +20,16 @@ public class Lift {
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
+    public Lift(DcMotor lift) {
+        this.lift = lift;
+
+        lift.setDirection(DcMotor.Direction.REVERSE);
+        lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lift.setTargetPosition(0);
+        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
+
     public void liftByLevel() {
         int level = pos / 1250;
         if (gamepad2.dpad_up && (level < 4) && lift.getCurrentPosition() >= pos - 100) {
@@ -53,5 +63,11 @@ public class Lift {
         if (lift.getCurrentPosition() < pos) {
             lift.setPower(1);
         }
+    }
+
+    public void lift(int levels) {
+        pos += levels*1250;
+        lift.setTargetPosition(pos);
+        lift.setPower(0.5);
     }
 }
