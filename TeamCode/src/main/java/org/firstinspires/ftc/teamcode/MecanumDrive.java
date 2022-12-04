@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.Range;
 
@@ -15,10 +16,10 @@ public class MecanumDrive {
     public static final double STEP_PER_INCH = 45.285;
 
     //Motor Variables
-    private DcMotor frontLeftDrive;
-    private DcMotor frontRightDrive;
-    private DcMotor backLeftDrive;
-    private DcMotor backRightDrive;
+    public DcMotor frontLeftDrive;
+    public DcMotor frontRightDrive;
+    public DcMotor backLeftDrive;
+    public DcMotor backRightDrive;
 
     private Gamepad gamepad1;
 
@@ -67,17 +68,28 @@ public class MecanumDrive {
         this.backLeftDrive = backLeftDrive;
         this.backRightDrive = backRightDrive;
 
-        frontLeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontLeftDrive.setTargetPosition(0);
-        frontLeftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
         frontLeftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
-    public void move(Direction dir, int inches) {
+    public void move(Direction dir, double inches) {
+        frontLeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backLeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        frontLeftDrive.setTargetPosition(0);
+        frontRightDrive.setTargetPosition(0);
+        backLeftDrive.setTargetPosition(0);
+        backRightDrive.setTargetPosition(0);
+
+        frontLeftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontRightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backLeftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backRightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         double powerFrontLeftBackRight = 0;
         double powerFrontRightBackLeft = 0;
 
@@ -103,14 +115,21 @@ public class MecanumDrive {
                 break;
         }
 
-        frontLeftDrive.setTargetPosition((int)(inches*STEP_PER_INCH));
+        frontLeftDrive.setTargetPosition((int)(-inches*powerFrontLeftBackRight*STEP_PER_INCH));
+        frontRightDrive.setTargetPosition((int)(inches*powerFrontRightBackLeft*STEP_PER_INCH));
+        backLeftDrive.setTargetPosition((int)(-inches*powerFrontRightBackLeft*STEP_PER_INCH));
+        backRightDrive.setTargetPosition((int)(inches*powerFrontLeftBackRight*STEP_PER_INCH));
 
-        frontLeftDrive.setPower(powerFrontLeftBackRight);
+        frontLeftDrive.setPower(-powerFrontLeftBackRight);
         frontRightDrive.setPower(powerFrontRightBackLeft);
-        backLeftDrive.setPower(powerFrontRightBackLeft);
+        backLeftDrive.setPower(-powerFrontRightBackLeft);
         backRightDrive.setPower(powerFrontLeftBackRight);
 
-        if (!frontLeftDrive.isBusy()) {
+        while (frontLeftDrive.isBusy() || frontRightDrive.isBusy() || backLeftDrive.isBusy() || backRightDrive.isBusy()) {
+
+        }
+
+        if (!frontLeftDrive.isBusy() || !frontRightDrive.isBusy() || !backLeftDrive.isBusy() || !backRightDrive.isBusy()) {
             frontLeftDrive.setPower(0);
             frontRightDrive.setPower(0);
             backLeftDrive.setPower(0);
@@ -153,10 +172,10 @@ public class MecanumDrive {
         }
 
         //Combining power and turn
-        frontLeftPower = Range.clip(powerFrontLeftBackRight - turn, -1, 1);
-        backRightPower = Range.clip(-(powerFrontLeftBackRight + turn), -1, 1);
-        frontRightPower = Range.clip(powerFrontRightBackLeft - turn, -1, 1);
-        backLeftPower = Range.clip(-(powerFrontRightBackLeft + turn), -1, 1);
+        frontLeftPower = .5*Range.clip(powerFrontLeftBackRight - turn, -1, 1);
+        backRightPower = .5*Range.clip(-(powerFrontLeftBackRight + turn), -1, 1);
+        frontRightPower = .5*Range.clip(powerFrontRightBackLeft - turn, -1, 1);
+        backLeftPower = .5*Range.clip(-(powerFrontRightBackLeft + turn), -1, 1);
 
         //Set motor power
         frontLeftDrive.setPower(frontLeftPower);

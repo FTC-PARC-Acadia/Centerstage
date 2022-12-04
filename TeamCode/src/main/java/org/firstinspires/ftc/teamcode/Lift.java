@@ -44,7 +44,7 @@ public class Lift {
     }
 
     public void liftByPush() {
-        if (gamepad2.right_bumper && pos < 4000) {
+        if (gamepad2.right_bumper && pos < 5000) {
             pos += 25;
             lift.setTargetPosition(pos);
             lift.setPower(1);

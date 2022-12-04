@@ -4,9 +4,10 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name = "AutoOpMode", group = "AutoOpModes")
+@Autonomous(name = "AutoOpModeRight", group = "AutoOpModes")
 public class AutoOpMode extends LinearOpMode {
     Robot robot;
 
@@ -15,6 +16,14 @@ public class AutoOpMode extends LinearOpMode {
 
         waitForStart();
 
-        robot.drive.move(Direction.FORWARD, 10);
+        if (opModeIsActive()) {
+            robot.drive.move(Direction.LEFT, 24.5);
+            robot.drive.move(Direction.FORWARD, 23);
+            robot.drive.move(Direction.LEFT, 13);
+
+            robot.lift.lift(4);
+
+            robot.intake.grasp(true);
+        }
     }
 }
