@@ -172,10 +172,10 @@ public class MecanumDrive {
         }
 
         //Combining power and turn
-        frontLeftPower = .5*Range.clip(powerFrontLeftBackRight - turn, -1, 1);
-        backRightPower = .5*Range.clip(-(powerFrontLeftBackRight + turn), -1, 1);
-        frontRightPower = .5*Range.clip(powerFrontRightBackLeft - turn, -1, 1);
-        backLeftPower = .5*Range.clip(-(powerFrontRightBackLeft + turn), -1, 1);
+        frontLeftPower = Range.clip(powerFrontLeftBackRight - turn, -0.75, 0.75);
+        backRightPower = Range.clip(-(powerFrontLeftBackRight + turn), -0.75, 0.75);
+        frontRightPower = Range.clip(powerFrontRightBackLeft - turn, -0.75, 0.75);
+        backLeftPower = Range.clip(-(powerFrontRightBackLeft + turn), -0.75, 0.75);
 
         //Set motor power
         frontLeftDrive.setPower(frontLeftPower);
