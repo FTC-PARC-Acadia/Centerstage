@@ -8,7 +8,7 @@ public class Intake {
     static final double MAX = 0.055;
 
     Gamepad gamepad2;
-    Servo claw;
+    public Servo claw;
 
     double position = MAX;
     
@@ -32,11 +32,15 @@ public class Intake {
     }
 
     public void grasp(boolean open) {
-        if (!open) {
+        if (open) {
             position = MAX;
         }
         else {
             position = MIN;
+        }
+
+        while (claw.getPosition() != position) {
+            claw.setPosition(position);
         }
     }
 }

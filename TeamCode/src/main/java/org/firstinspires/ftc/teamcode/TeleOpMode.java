@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import static org.firstinspires.ftc.teamcode.Direction.FORWARD;
-
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -9,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "MecanumOpMode", group = "TeleOpModes")
-public class MecanumOpMode extends OpMode {
+public class TeleOpMode extends OpMode {
     Robot robot;
 
     public void init() {
@@ -17,6 +15,6 @@ public class MecanumOpMode extends OpMode {
     }
 
     public void loop() {
-       robot.run(FORWARD);
+       robot.run();
     }
 }

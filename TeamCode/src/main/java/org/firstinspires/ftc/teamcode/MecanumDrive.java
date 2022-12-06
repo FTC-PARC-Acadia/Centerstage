@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.Range;
 
@@ -125,7 +124,7 @@ public class MecanumDrive {
         backLeftDrive.setPower(-powerFrontRightBackLeft);
         backRightDrive.setPower(powerFrontLeftBackRight);
 
-        while (frontLeftDrive.isBusy() || frontRightDrive.isBusy() || backLeftDrive.isBusy() || backRightDrive.isBusy()) {
+        while (frontLeftDrive.isBusy() && frontRightDrive.isBusy() && backLeftDrive.isBusy() && backRightDrive.isBusy()) {
 
         }
 
@@ -172,10 +171,10 @@ public class MecanumDrive {
         }
 
         //Combining power and turn
-        frontLeftPower = Range.clip(powerFrontLeftBackRight - turn, -0.75, 0.75);
-        backRightPower = Range.clip(-(powerFrontLeftBackRight + turn), -0.75, 0.75);
-        frontRightPower = Range.clip(powerFrontRightBackLeft - turn, -0.75, 0.75);
-        backLeftPower = Range.clip(-(powerFrontRightBackLeft + turn), -0.75, 0.75);
+        frontLeftPower = 0.75*Range.clip(powerFrontLeftBackRight - turn, -1, 1);
+        backRightPower = 0.75*Range.clip(-(powerFrontLeftBackRight + turn), -1, 1);
+        frontRightPower = 0.75*Range.clip(powerFrontRightBackLeft - turn, -1, 1);
+        backLeftPower = 0.75*Range.clip(-(powerFrontRightBackLeft + turn), -1, 1);
 
         //Set motor power
         frontLeftDrive.setPower(frontLeftPower);

@@ -35,11 +35,11 @@ public class Lift {
         if (gamepad2.dpad_up && (level < 4) && lift.getCurrentPosition() >= pos - 100) {
             pos += 1250;
             lift.setTargetPosition(pos);
-            lift.setPower(0.5);
+            lift.setPower(1);
         } else if (gamepad2.dpad_down && (level > 0) && lift.getCurrentPosition() <= pos + 100) {
             pos -= 1250;
             lift.setTargetPosition(pos);
-            lift.setPower(-0.5);
+            lift.setPower(-1);
         }
     }
 
@@ -68,6 +68,14 @@ public class Lift {
     public void lift(int levels) {
         pos += levels*1250;
         lift.setTargetPosition(pos);
-        lift.setPower(0.5);
+        lift.setPower(1);
+
+        while (lift.isBusy()) {
+
+        }
+
+        if (!lift.isBusy()) {
+            lift.setPower(0);
+        }
     }
 }

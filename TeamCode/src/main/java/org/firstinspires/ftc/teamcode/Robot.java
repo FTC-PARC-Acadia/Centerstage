@@ -23,7 +23,7 @@ public class Robot {
         drive = new MecanumDrive(frontLeftDrive, frontRightDrive, backLeftDrive, backRightDrive);
     }
     
-    public void run(Direction forward) {
+    public void run() {
         drive.fieldCentricDrive();
         intake.grab();
         lift.liftByLevel();
