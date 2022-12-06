@@ -30,7 +30,6 @@ public class AutoOpModeLeft extends LinearOpMode {
 
             robot.drive.move(Direction.LEFT, 13);
             robot.drive.move(Direction.FORWARD, 13);
-            //We parked!
         }
     }
 }

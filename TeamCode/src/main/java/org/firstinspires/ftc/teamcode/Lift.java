@@ -30,25 +30,25 @@ public class Lift {
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
-    public void liftByLevel() {
-        int level = pos / 1250;
-        if (gamepad2.dpad_up && (level < 4) && lift.getCurrentPosition() >= pos - 100) {
-            pos += 1250;
-            lift.setTargetPosition(pos);
-            lift.setPower(1);
-        } else if (gamepad2.dpad_down && (level > 0) && lift.getCurrentPosition() <= pos + 100) {
-            pos -= 1250;
-            lift.setTargetPosition(pos);
-            lift.setPower(-1);
-        }
-    }
+//    public void liftByLevel() {
+//        int level = pos / 1250;
+//        if (gamepad2.dpad_up && (level < 4) && lift.getCurrentPosition() >= pos - 100) {
+//            pos += 1250;
+//            lift.setTargetPosition(pos);
+//            lift.setPower(1);
+//        } else if (gamepad2.dpad_down && (level > 0) && lift.getCurrentPosition() <= pos + 100) {
+//            pos -= 1250;
+//            lift.setTargetPosition(pos);
+//            lift.setPower(-1);
+//        }
+//    }
 
     public void liftByPush() {
-        if (gamepad2.right_bumper && pos < 5000) {
-            pos += 25;
+        if (gamepad2.dpad_up && pos < 5000) {
+            pos += 50;
             lift.setTargetPosition(pos);
             lift.setPower(1);
-        } else if (gamepad2.right_trigger > 0 && pos > 50) {
+        } else if (gamepad2.dpad_down && pos > 50) {
             pos -= 50;
             lift.setTargetPosition(pos);
             lift.setPower(1);
@@ -65,8 +65,8 @@ public class Lift {
         }
     }
 
-    public void lift(int levels) {
-        pos += levels*1250;
+    public void lift(int level) {
+        pos = level*700;
         lift.setTargetPosition(pos);
         lift.setPower(1);
 

@@ -7,10 +7,12 @@ public class Intake {
     static final double MIN = 0.02;
     static final double MAX = 0.055;
 
-    Gamepad gamepad2;
+    private Gamepad gamepad2;
     public Servo claw;
 
     double position = MAX;
+
+    int count = 0;
     
     public Intake(Gamepad gamepad2, Servo claw) {
         this.gamepad2 = gamepad2;
@@ -22,14 +24,30 @@ public class Intake {
     }
     
     public void grab(){
-        if(gamepad2.left_bumper && claw.getPosition() < MAX) {
-            position += 0.01;
-        } else if (gamepad2.left_trigger > 0 && claw.getPosition() > MIN) {
-            position -= 0.01;
+        if (gamepad2.a && count > 20) {
+            if (position < MAX) {
+                position = MAX;
+            } else {
+                position = MIN;
+            }
+
+            count = 0;
         }
+
+        count++;
 
         claw.setPosition(position);
     }
+
+//    public void grab() {
+//        if(gamepad2.left_bumper) {
+//            position = MAX;
+//        } else if (gamepad2.left_trigger > 0) {
+//            position = MIN;
+//        }
+//
+//        claw.setPosition(position);
+//    }
 
     public void grasp(boolean open) {
         if (open) {
@@ -39,7 +57,7 @@ public class Intake {
             position = MIN;
         }
 
-        while (claw.getPosition() != position) {
+        for (int i = 0; i < 30; i++) {
             claw.setPosition(position);
         }
     }

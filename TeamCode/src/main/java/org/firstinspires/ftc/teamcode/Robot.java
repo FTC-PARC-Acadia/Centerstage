@@ -5,6 +5,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+
 public class Robot {
 
     Intake intake;
@@ -26,7 +30,6 @@ public class Robot {
     public void run() {
         drive.fieldCentricDrive();
         intake.grab();
-        lift.liftByLevel();
         lift.liftByPush();
         lift.adjust();
     }
