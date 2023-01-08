@@ -19,8 +19,8 @@ public class AutoOpModeRight extends LinearOpMode {
             robot.intake.grasp(false);
 
             robot.drive.move(Direction.LEFT, 24.5);
-            robot.drive.move(Direction.FORWARD, 23);
-            robot.drive.move(Direction.LEFT, 13);
+            robot.drive.move(Direction.FORWARD, 29);
+            robot.drive.move(Direction.LEFT, 15);
 
             robot.lift.lift(4);
 

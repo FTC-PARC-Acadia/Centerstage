@@ -45,6 +45,7 @@ public class Lift {
 
     public void liftByPush() {
         if (gamepad2.dpad_up && pos < 5000) {
+
             pos += 50;
             lift.setTargetPosition(pos);
             lift.setPower(1);
@@ -66,9 +67,9 @@ public class Lift {
     }
 
     public void lift(int level) {
-        pos = level*700;
+        pos = level*1000;
         lift.setTargetPosition(pos);
-        lift.setPower(1);
+        lift.setPower(0.75);
 
         while (lift.isBusy()) {
 

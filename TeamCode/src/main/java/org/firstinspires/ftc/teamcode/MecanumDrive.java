@@ -94,30 +94,30 @@ public class MecanumDrive {
 
         switch(dir) {
             case FORWARD:
-                powerFrontLeftBackRight = 1;
-                powerFrontRightBackLeft = 1;
+                powerFrontLeftBackRight = 0.5;
+                powerFrontRightBackLeft = 0.5;
                 break;
 
             case BACKWARD:
-                powerFrontLeftBackRight = -1;
-                powerFrontRightBackLeft = -1;
+                powerFrontLeftBackRight = -0.5;
+                powerFrontRightBackLeft = -0.5;
                 break;
 
             case RIGHT:
-                powerFrontLeftBackRight = 1;
-                powerFrontRightBackLeft = -1;
+                powerFrontLeftBackRight = 0.5;
+                powerFrontRightBackLeft = -0.5;
                 break;
 
             case LEFT:
-                powerFrontLeftBackRight = -1;
-                powerFrontRightBackLeft = 1;
+                powerFrontLeftBackRight = -0.5;
+                powerFrontRightBackLeft = 0.5;
                 break;
         }
 
-        frontLeftDrive.setTargetPosition((int)(-inches*powerFrontLeftBackRight*STEP_PER_INCH));
-        frontRightDrive.setTargetPosition((int)(inches*powerFrontRightBackLeft*STEP_PER_INCH));
-        backLeftDrive.setTargetPosition((int)(-inches*powerFrontRightBackLeft*STEP_PER_INCH));
-        backRightDrive.setTargetPosition((int)(inches*powerFrontLeftBackRight*STEP_PER_INCH));
+        frontLeftDrive.setTargetPosition((int)(-inches*powerFrontLeftBackRight*STEP_PER_INCH*2));
+        frontRightDrive.setTargetPosition((int)(inches*powerFrontRightBackLeft*STEP_PER_INCH*2));
+        backLeftDrive.setTargetPosition((int)(-inches*powerFrontRightBackLeft*STEP_PER_INCH*2));
+        backRightDrive.setTargetPosition((int)(inches*powerFrontLeftBackRight*STEP_PER_INCH*2));
 
         frontLeftDrive.setPower(-powerFrontLeftBackRight);
         frontRightDrive.setPower(powerFrontRightBackLeft);
@@ -146,7 +146,6 @@ public class MecanumDrive {
     }
 
     boolean doTurn = false;
-    double position = 0;
     int count = 0;
 
     public void drive(double adjustmentAngle) {
