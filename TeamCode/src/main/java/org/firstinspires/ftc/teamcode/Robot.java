@@ -5,32 +5,33 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-
 public class Robot {
 
     Intake intake;
-    Lift lift;
+    Lift lift1;
+    Lift lift2;
     MecanumDrive drive;
     
-    public Robot(Gamepad gamepad1, Gamepad gamepad2, Servo claw, DcMotor lift, DcMotor frontLeftDrive, DcMotor frontRightDrive, DcMotor backLeftDrive, DcMotor backRightDrive, BNO055IMU imu) {
+    public Robot(Gamepad gamepad1, Gamepad gamepad2, Servo claw, DcMotor[] lifts, DcMotor frontLeftDrive, DcMotor frontRightDrive, DcMotor backLeftDrive, DcMotor backRightDrive, BNO055IMU imu) {
         intake = new Intake(gamepad2, claw);
-        this.lift = new Lift(gamepad2, lift);
         drive = new MecanumDrive(gamepad1, frontLeftDrive, frontRightDrive, backLeftDrive, backRightDrive, imu);
+        lift1 = new Lift(gamepad2, lifts[0]);
+        lift2 = new Lift(gamepad2, lifts[1]);
     }
 
-    public Robot(Servo claw, DcMotor lift, DcMotor frontLeftDrive, DcMotor frontRightDrive, DcMotor backLeftDrive, DcMotor backRightDrive, BNO055IMU imu) {
+    public Robot(Servo claw, DcMotor[] lifts, DcMotor frontLeftDrive, DcMotor frontRightDrive, DcMotor backLeftDrive, DcMotor backRightDrive, BNO055IMU imu) {
         intake = new Intake(claw);
-        this.lift = new Lift(lift);
+        lift1 = new Lift(lifts[0]);
+        lift2 = new Lift(lifts[1]);
         drive = new MecanumDrive(frontLeftDrive, frontRightDrive, backLeftDrive, backRightDrive);
     }
     
     public void run() {
         drive.fieldCentricDrive();
         intake.grab();
-        lift.liftByPush();
-        lift.adjust();
+        lift1.liftByPush();
+        lift2.liftByPush();
+        lift1.adjust();
+        lift2.adjust();
     }
 }

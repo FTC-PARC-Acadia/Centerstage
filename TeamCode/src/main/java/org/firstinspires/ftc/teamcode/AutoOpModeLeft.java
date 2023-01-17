@@ -11,7 +11,7 @@ public class AutoOpModeLeft extends LinearOpMode {
     Robot robot;
 
     public void runOpMode() {
-        robot = new Robot(hardwareMap.get(Servo.class, "intake"), hardwareMap.get(DcMotor.class, "lift"), hardwareMap.get(DcMotor.class, "frontLeftDrive"), hardwareMap.get(DcMotor.class, "frontRightDrive"), hardwareMap.get(DcMotor.class, "backLeftDrive"), hardwareMap.get(DcMotor.class, "backRightDrive"), hardwareMap.get(BNO055IMU.class, "imu"));
+        robot = new Robot(hardwareMap.get(Servo.class, "intake"), new DcMotor[]{hardwareMap.get(DcMotor.class, "lift1"), hardwareMap.get(DcMotor.class, "lift2")}, hardwareMap.get(DcMotor.class, "frontLeftDrive"), hardwareMap.get(DcMotor.class, "frontRightDrive"), hardwareMap.get(DcMotor.class, "backLeftDrive"), hardwareMap.get(DcMotor.class, "backRightDrive"), hardwareMap.get(BNO055IMU.class, "imu"));
 
         waitForStart();
 
@@ -22,7 +22,8 @@ public class AutoOpModeLeft extends LinearOpMode {
             robot.drive.move(Direction.FORWARD, 29);
             robot.drive.move(Direction.RIGHT, 15);
 
-            robot.lift.lift(4);
+            robot.lift1.lift(4);
+            robot.lift2.lift(4);
 
             robot.drive.move(Direction.FORWARD, 3.5);
 
@@ -30,7 +31,8 @@ public class AutoOpModeLeft extends LinearOpMode {
 
             robot.drive.move(Direction.BACKWARD, 3.5);
 
-            robot.lift.lift(0);
+            robot.lift1.lift(0);
+            robot.lift2.lift(0);
 
             robot.drive.move(Direction.LEFT, 12);
             robot.drive.move(Direction.FORWARD, 13);
@@ -38,7 +40,8 @@ public class AutoOpModeLeft extends LinearOpMode {
         }
 
         while (opModeIsActive()) {
-            robot.lift.adjust();
+            robot.lift1.adjust();
+            robot.lift2.adjust();
         }
     }
 }
