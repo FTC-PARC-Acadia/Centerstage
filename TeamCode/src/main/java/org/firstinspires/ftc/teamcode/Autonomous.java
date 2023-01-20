@@ -1,17 +1,21 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-
-import java.util.List;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "ImageRecognition", group = "AutoOpModes")
 public class Autonomous extends LinearOpMode {
+    public int label;
+
     private static final String TFOD_MODEL_ASSET = "NewConeSleeveDetection.tflite";
 
     private static final String[] LABELS = {
@@ -25,6 +29,38 @@ public class Autonomous extends LinearOpMode {
     private VuforiaLocalizer vuforia;
     private TFObjectDetector tfod;
 
+    SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+    Robot robot = new Robot(hardwareMap.get(Servo.class, "intake"), new DcMotor[]{hardwareMap.get(DcMotor.class, "lift1"), hardwareMap.get(DcMotor.class, "lift2")});
+
+    Trajectory goToCone = drive.trajectoryBuilder(new Pose2d())
+            .forward(24)
+            .build();
+
+    Trajectory goToTower = drive.trajectoryBuilder(new Pose2d())
+            .forward(3)
+            .strafeLeft(12)
+            .forward(2)
+            .build();
+
+    Trajectory placeCone = drive.trajectoryBuilder(new Pose2d())
+            .forward(1.5)
+            .build();
+
+    Trajectory backUp = drive.trajectoryBuilder(new Pose2d())
+            .back(1.5)
+            .build();
+
+    Trajectory goToCycleSpot = drive.trajectoryBuilder(new Pose2d())
+            .lineToLinearHeading(new Pose2d(24,29,Math.toRadians(90)))
+            .strafeLeft(12)
+            .build();
+
+    Trajectory goToParkSpot = drive.trajectoryBuilder(new Pose2d())
+            .back(12)
+            .forward((label - 1)*24)
+            .build();
+
+
     public void runOpMode() {
         initVuforia();
         initTfod();
@@ -37,22 +73,35 @@ public class Autonomous extends LinearOpMode {
         waitForStart();
 
         if (opModeIsActive()) {
-            while (opModeIsActive()) {
-                if (tfod != null) {
-                    List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+            drive.followTrajectory(goToCone);
 
-                    if (updatedRecognitions != null) {
-                        telemetry.addData("# Objects Detected", updatedRecognitions.size());
+            while (tfod.getUpdatedRecognitions().size() == 0) {
 
-                        for (Recognition recognition : updatedRecognitions) {
-                            telemetry.addData("Color Detected", "%s", recognition.getLabel());
-                        }
-
-                        telemetry.update();
-                    }
-                }
             }
+
+            label = labelToInt(tfod.getUpdatedRecognitions().get(0).getLabel());
+            telemetry.addData("Color Detected", tfod.getUpdatedRecognitions().get(0).getLabel());
+            telemetry.update();
+
+            drive.followTrajectory(goToTower);
+
+            robot.lift.lift(4);
+
+            drive.followTrajectory(placeCone);
+
+            robot.intake.grasp(true);
+
+            drive.followTrajectory(backUp);
+
+            robot.lift.lift(0);
+
+            drive.followTrajectory(goToCycleSpot);
+            drive.followTrajectory(goToParkSpot);
         }
+    }
+
+    public int labelToInt(String label) {
+        return Integer.parseInt(label.substring(0,0));
     }
 
     private void initVuforia() {

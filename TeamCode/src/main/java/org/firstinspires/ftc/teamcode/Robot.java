@@ -19,9 +19,8 @@ public class Robot {
         lift = new Lift(gamepad2, lifts);
     }
 
-    public Robot(Servo claw, DcMotor[] lifts, DcMotor frontLeftDrive, DcMotor frontRightDrive, DcMotor backLeftDrive, DcMotor backRightDrive, BNO055IMU imu) {
+    public Robot(Servo claw, DcMotor[] lifts) {
         intake = new Intake(claw);
-        drive = new MecanumDrive(frontLeftDrive, frontRightDrive, backLeftDrive, backRightDrive);
         lift = new Lift(lifts);
     }
     
