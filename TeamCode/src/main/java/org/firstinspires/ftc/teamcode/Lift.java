@@ -53,7 +53,7 @@ public class Lift {
 //    }
 
     public void liftByPush() {
-        if (gamepad2.dpad_up && pos < 5000) {
+        if (gamepad2.dpad_up && pos < 6000) {
 
             pos += 50;
             for (DcMotor lift : lifts) {

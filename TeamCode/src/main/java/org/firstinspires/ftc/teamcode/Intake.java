@@ -4,8 +4,8 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class Intake {
-    static final double MIN = 0.02;
-    static final double MAX = 0.055;
+    static final double MAX = 0.1;
+    static final double MIN = 0.08;
 
     private Gamepad gamepad2;
     public Servo claw;
