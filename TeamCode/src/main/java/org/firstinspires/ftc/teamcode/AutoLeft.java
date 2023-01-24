@@ -1,11 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -16,7 +15,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 import java.util.ArrayList;
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "ImageRecognition", group = "AutoOpModes")
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "AutoLeft", group = "AutoOpModes")
 public class AutoLeft extends LinearOpMode {
     public int label;
 
@@ -32,6 +31,7 @@ public class AutoLeft extends LinearOpMode {
 
     private VuforiaLocalizer vuforia;
     private TFObjectDetector tfod;
+    private ElapsedTime time = new ElapsedTime;
 
     public void runOpMode() {
         initVuforia();
@@ -48,7 +48,12 @@ public class AutoLeft extends LinearOpMode {
 
         waitForStart();
 
+        time.reset();
+
         if (opModeIsActive()) {
+//            robot.intake.grasp(true);
+            drive.followTrajectory(left(drive, 5));
+            drive.followTrajectory(forward(drive, 3));
             //Sleeve Detection
             while (opModeIsActive() && tfod.getRecognitions().isEmpty()) {
                 telemetry.addLine("Hi");
@@ -65,20 +70,21 @@ public class AutoLeft extends LinearOpMode {
                 telemetry.addData("Color Detected", recognitions.get(0).getLabel());
                 telemetry.update();
             }
-
+            drive.followTrajectory(backward(drive, 3));
+            drive.followTrajectory(right(drive, 5));
             drive.followTrajectory(right(drive, 24));
-            drive.followTrajectory(forward(drive, 48));
+            drive.followTrajectory(forward(drive, 53));
             drive.followTrajectory(left(drive, 12));
 
-            robot.lift.lift(5);
-            drive.followTrajectory(forward(drive, 2));
-            robot.intake.grasp(true);
-            drive.followTrajectory(backward(drive, 2));
-            robot.lift.lift(0);
-            robot.intake.grasp(false);
+//            robot.lift.lift(3);
+            drive.followTrajectory(forward(drive, 5));
+//            robot.intake.grasp(false);
+            drive.followTrajectory(backward(drive, 5));
+//            robot.lift.lift(0);
+//            robot.intake.grasp(true);
 
-            drive.followTrajectory(left(drive, 36));
-            drive.followTrajectory(right(drive, 12 + (label - 1)*24));
+            drive.followTrajectory(left(drive, 48));
+            drive.followTrajectory(right(drive, (label - 1)*36));
         }
     }
 
@@ -127,7 +133,7 @@ public class AutoLeft extends LinearOpMode {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minResultConfidence = 0.75f;
+        tfodParameters.minResultConfidence = 0.5f;
         tfodParameters.isModelTensorFlow2 = true;
         tfodParameters.inputSize = 300;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);

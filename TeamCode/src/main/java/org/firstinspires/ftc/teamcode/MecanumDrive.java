@@ -1,10 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -21,6 +20,8 @@ public class MecanumDrive {
     public DcMotor backRightDrive;
 
     private Gamepad gamepad1;
+
+    public HardwareMap hardwareMap;
 
     //Power Variables
     private double frontLeftPower;
@@ -39,7 +40,7 @@ public class MecanumDrive {
     BNO055IMU imu;
     Orientation orientation;
 
-    public MecanumDrive(Gamepad gamepad1, DcMotor frontLeftDrive, DcMotor frontRightDrive, DcMotor backLeftDrive, DcMotor backRightDrive, BNO055IMU imu) {
+    public MecanumDrive(Gamepad gamepad1, DcMotor frontLeftDrive, DcMotor frontRightDrive, DcMotor backLeftDrive, DcMotor backRightDrive, BNO055IMU imu, HardwareMap hardwareMap) {
         this.frontLeftDrive = frontLeftDrive;
         this.frontRightDrive = frontRightDrive;
         this.backLeftDrive = backLeftDrive;
@@ -48,6 +49,8 @@ public class MecanumDrive {
         this.gamepad1 = gamepad1;
 
         this.imu = imu;
+
+        this.hardwareMap = hardwareMap;
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;

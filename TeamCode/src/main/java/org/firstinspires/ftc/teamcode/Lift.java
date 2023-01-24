@@ -9,6 +9,7 @@ public class Lift {
     DcMotor[] lifts;
 
     private int pos = 0;
+    private int min = 50;
 
     public Lift(Gamepad gamepad2, DcMotor[] lifts) {
         this.gamepad2 = gamepad2;
@@ -60,7 +61,7 @@ public class Lift {
                 lift.setTargetPosition(pos);
                 lift.setPower(1);
             }
-        } else if (gamepad2.dpad_down && pos > 50) {
+        } else if (gamepad2.dpad_down && pos > min) {
             pos -= 50;
             for (DcMotor lift : lifts) {
                 lift.setTargetPosition(pos);
@@ -71,6 +72,11 @@ public class Lift {
         if (!lifts[0].isBusy() || !lifts[1].isBusy()) {
             lifts[0].setPower(0);
             lifts[1].setPower(0);
+        }
+
+        if(gamepad2.b){
+            //reset minimum position
+            min -= 50;
         }
     }
 
