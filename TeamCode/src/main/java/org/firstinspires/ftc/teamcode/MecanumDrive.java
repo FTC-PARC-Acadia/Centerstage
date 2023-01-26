@@ -40,6 +40,8 @@ public class MecanumDrive {
     BNO055IMU imu;
     Orientation orientation;
 
+    SampleMecanumDrive sampleMecanumDrive;
+
     public MecanumDrive(Gamepad gamepad1, DcMotor frontLeftDrive, DcMotor frontRightDrive, DcMotor backLeftDrive, DcMotor backRightDrive, BNO055IMU imu, HardwareMap hardwareMap) {
         this.frontLeftDrive = frontLeftDrive;
         this.frontRightDrive = frontRightDrive;
@@ -51,6 +53,8 @@ public class MecanumDrive {
         this.imu = imu;
 
         this.hardwareMap = hardwareMap;
+
+        sampleMecanumDrive = new SampleMecanumDrive(hardwareMap);
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -76,9 +80,13 @@ public class MecanumDrive {
     int count = 0;
 
     public void drive(double adjustmentAngle) {
-        if(gamepad1.x && count > 5) {
-            SampleMecanumDrive sampleMecanumDrive = new SampleMecanumDrive(hardwareMap);
+        if(gamepad1.left_bumper && count > 5) {
             sampleMecanumDrive.turn(Math.toRadians(90));
+            count = 0;
+        }
+
+        if(gamepad1.right_bumper && count > 5) {
+            sampleMecanumDrive.turn(Math.toRadians(-90));
             count = 0;
         }
 

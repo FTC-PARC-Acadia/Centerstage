@@ -31,7 +31,7 @@ public class AutoLeft extends LinearOpMode {
 
     private VuforiaLocalizer vuforia;
     private TFObjectDetector tfod;
-    private ElapsedTime time = new ElapsedTime;
+    private ElapsedTime time = new ElapsedTime();
 
     public void runOpMode() {
         initVuforia();
