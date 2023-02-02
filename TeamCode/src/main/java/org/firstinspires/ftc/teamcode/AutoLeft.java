@@ -88,25 +88,25 @@ public class AutoLeft extends LinearOpMode {
         }
     }
 
-    public Trajectory forward(SampleMecanumDrive drive, int inches) {
+    public static Trajectory forward(SampleMecanumDrive drive, double inches) {
         return drive.trajectoryBuilder(drive.getPoseEstimate())
                 .forward(inches)
                 .build();
     }
 
-    public Trajectory backward(SampleMecanumDrive drive, int inches) {
+    public static Trajectory backward(SampleMecanumDrive drive, double inches) {
         return drive.trajectoryBuilder(drive.getPoseEstimate())
                 .back(inches)
                 .build();
     }
 
-    public Trajectory left(SampleMecanumDrive drive, int inches) {
+    public static Trajectory left(SampleMecanumDrive drive, double inches) {
         return drive.trajectoryBuilder(drive.getPoseEstimate())
                 .strafeLeft(inches)
                 .build();
     }
 
-    public Trajectory right(SampleMecanumDrive drive, int inches) {
+    public static Trajectory right(SampleMecanumDrive drive, double inches) {
         return drive.trajectoryBuilder(drive.getPoseEstimate())
                 .strafeRight(inches)
                 .build();

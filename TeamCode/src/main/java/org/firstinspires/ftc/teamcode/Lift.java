@@ -10,6 +10,9 @@ public class Lift {
 
     private int pos = 0;
     private int min = 50;
+    private final double stepsPerInch = 122.2055;
+    private int maxPos = (int)(33.5 * stepsPerInch);
+
 
     public Lift(Gamepad gamepad2, DcMotor[] lifts) {
         this.gamepad2 = gamepad2;
@@ -40,18 +43,45 @@ public class Lift {
         }
     }
 
-//    public void liftByLevel() {
-//        int level = pos / 1250;
-//        if (gamepad2.dpad_up && (level < 4) && lift.getCurrentPosition() >= pos - 100) {
-//            pos += 1250;
-//            lift.setTargetPosition(pos);
-//            lift.setPower(1);
-//        } else if (gamepad2.dpad_down && (level > 0) && lift.getCurrentPosition() <= pos + 100) {
-//            pos -= 1250;
-//            lift.setTargetPosition(pos);
-//            lift.setPower(-1);
-//        }
-//    }
+   public void liftByLevel() {
+       int minLevel = (int)(stepsPerInch * 13.5);
+       int interval = (int)(stepsPerInch * 10);
+       int level = (2 * (pos - minLevel) / (maxPos - minLevel));
+
+       for(DcMotor lift : lifts){
+           int currentPos = lift.getCurrentPosition();
+           if(gamepad2.dpad_up && (pos < minLevel) && currentPos >= pos - 100){
+               pos = minLevel - currentPos;
+               lift.setTargetPosition(pos);
+               lift.setPower(1);
+
+           }
+           else if (gamepad2.dpad_up && (level < 2) && currentPos >= pos - 100) {
+              pos = minLevel + interval*(level+1);
+              lift.setTargetPosition(pos);
+              lift.setPower(1);
+           }
+           else if (gamepad2.dpad_down && (level > 0) && currentPos <= pos + 100) {
+              pos -= minLevel + interval*(level-1);
+              lift.setTargetPosition(pos);
+              lift.setPower(-1);
+           }
+       }
+   }
+
+    public void liftInches(double inches){
+        int steps = (int)(inches * stepsPerInch);
+        pos += steps;
+
+        for(DcMotor lift : lifts){
+            lift.setTargetPosition(pos);
+            lift.setPower((steps > 0) ? 1 : -1);
+//             if(steps > 0)
+//                 lift.setPower(1);
+//             else
+//                 lift.setPower(-1);
+        }
+    }
 
     public void liftByPush() {
         if (gamepad2.dpad_up && pos < 6000) {
@@ -61,7 +91,9 @@ public class Lift {
                 lift.setTargetPosition(pos);
                 lift.setPower(1);
             }
-        } else if (gamepad2.dpad_down && pos > min) {
+        }
+
+        else if (gamepad2.dpad_down && pos > min) {
             pos -= 50;
             for (DcMotor lift : lifts) {
                 lift.setTargetPosition(pos);

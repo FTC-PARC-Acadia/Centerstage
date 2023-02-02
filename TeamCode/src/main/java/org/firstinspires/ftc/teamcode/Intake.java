@@ -61,4 +61,8 @@ public class Intake {
             claw.setPosition(position);
         }
     }
+
+    public boolean ifOpen() {
+        return (position == MAX);
+    }
 }
