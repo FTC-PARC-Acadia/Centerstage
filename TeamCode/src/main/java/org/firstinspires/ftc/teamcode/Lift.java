@@ -11,7 +11,7 @@ public class Lift {
     private int pos = 0;
     private int min = 50;
     private final double stepsPerInch = 122.2055;
-    private int maxPos = (int)(33.5 * stepsPerInch);
+    private final int MAX_POS = (int)(33.5 * stepsPerInch);
 
 
     public Lift(Gamepad gamepad2, DcMotor[] lifts) {
@@ -46,7 +46,7 @@ public class Lift {
    public void liftByLevel() {
        int minLevel = (int)(stepsPerInch * 13.5);
        int interval = (int)(stepsPerInch * 10);
-       int level = (2 * (pos - minLevel) / (maxPos - minLevel));
+       int level = (2 * (pos - minLevel) / (MAX_POS - minLevel));
 
        for(DcMotor lift : lifts){
            int currentPos = lift.getCurrentPosition();
