@@ -50,18 +50,18 @@ public class Lift {
 
        for(DcMotor lift : lifts){
            int currentPos = lift.getCurrentPosition();
-           if(gamepad2.dpad_up && (pos < minLevel) && currentPos >= pos - 100){
+           if(gamepad2.left_bumper && (pos < minLevel) && currentPos >= pos - 100){
                pos = minLevel - currentPos;
                lift.setTargetPosition(pos);
                lift.setPower(1);
 
            }
-           else if (gamepad2.dpad_up && (level < 2) && currentPos >= pos - 100) {
+           else if (gamepad2.left_bumper && (level < 2) && currentPos >= pos - 100) {
               pos = minLevel + interval*(level+1);
               lift.setTargetPosition(pos);
               lift.setPower(1);
            }
-           else if (gamepad2.dpad_down && (level > 0) && currentPos <= pos + 100) {
+           else if (gamepad2.left_trigger > 0.1 && (level > 0) && currentPos <= pos + 100) {
               pos -= minLevel + interval*(level-1);
               lift.setTargetPosition(pos);
               lift.setPower(-1);

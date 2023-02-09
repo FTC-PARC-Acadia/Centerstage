@@ -59,7 +59,7 @@ public class Robot {
         intake.grasp(false);
         
         //moving up
-        lift.liftInches(MOVE_Y + 5);
+        lift.liftInches(MOVE_Y + CONE_HEIGHT);
 
         //moving backward
         sampleDrive.followTrajectory(backward(sampleDrive, MOVE_X));
