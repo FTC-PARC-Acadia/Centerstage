@@ -18,7 +18,6 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 @Config
 @Disabled
 public class DriveConstants {
-
     /*
      * These are motor constants that should be listed online for your motors.
      */
