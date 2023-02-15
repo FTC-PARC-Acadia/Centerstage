@@ -10,24 +10,29 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Autonomous(name = "AutonomousLeft", group = "AutoOpModes")
 public class AutonomousLeft extends LinearOpMode {
-    AutoState state;
     ElapsedTime runtime;
     SampleMecanumDrive drive;
 
+    boolean state;
+
     public void runOpMode() {
-        state = AutoState.RUNNING;
+        state = true;
         drive = new SampleMecanumDrive(hardwareMap);
         runtime = new ElapsedTime();
 
-        Thread runThread = new RunThread();
-        Thread checkStateThread = new CheckStateThread();
+        Thread autoThread = new AutoThread();
 
         waitForStart();
         runtime.reset();
 
         if (opModeIsActive()) {
-            checkStateThread.start();
-            runThread.start();
+            autoThread.start();
+        }
+
+        while (opModeIsActive()) {
+            if (runtime.seconds() > 1) {
+                autoThread.interrupt();
+            }
         }
     }
 
@@ -35,23 +40,10 @@ public class AutonomousLeft extends LinearOpMode {
         drive.followTrajectory(forward(drive, 70));
     }
 
-    private class RunThread extends Thread {
+    private class AutoThread extends Thread {
         public void run() {
-            while (opModeIsActive()) {
-                if (runtime.time() > 4) {
-                    state = AutoState.STOPPED;
-                }
-            }
-        }
-    }
-
-    private class CheckStateThread extends Thread {
-        public void run() {
-            switch (state) {
-                case RUNNING:
-                    runAuto();
-                case STOPPED:
-                    break;
+            while (opModeIsActive() && state) {
+                runAuto();
             }
         }
     }
