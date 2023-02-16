@@ -1,18 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
-import static org.firstinspires.ftc.teamcode.AutoLeft.backward;
-import static org.firstinspires.ftc.teamcode.AutoLeft.forward;
+import static org.firstinspires.ftc.teamcode.TrajectoryBuilder.backward;
+import static org.firstinspires.ftc.teamcode.TrajectoryBuilder.forward;
 
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-
-import java.util.ArrayList;
+import org.firstinspires.ftc.teamcode.drive.advanced.SampleMecanumDriveCancelable;
 
 public class Robot {
     final double MOVE_X = 0;
@@ -23,7 +20,7 @@ public class Robot {
     Intake intake;
     Lift lift;
     MecanumDrive drive;
-    SampleMecanumDrive sampleDrive;
+    SampleMecanumDriveCancelable sampleDrive;
     
     public Robot(Gamepad gamepad1, Gamepad gamepad2, Servo claw, DcMotor[] lifts, DcMotor frontLeftDrive, DcMotor frontRightDrive, DcMotor backLeftDrive, DcMotor backRightDrive, BNO055IMU imu, HardwareMap hardwareMap) {
         intake = new Intake(gamepad2, claw);

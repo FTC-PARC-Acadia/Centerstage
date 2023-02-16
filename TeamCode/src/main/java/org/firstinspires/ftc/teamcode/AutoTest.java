@@ -21,8 +21,8 @@ import org.firstinspires.ftc.teamcode.drive.advanced.SampleMecanumDriveCancelabl
 
 import java.util.ArrayList;
 
-@Autonomous(name = "AutonomousLeft", group = "AutoOpModes")
-public class AutonomousLeft extends LinearOpMode {
+@Autonomous(name = "AutoTest", group = "AutoOpModes")
+public class AutoTest extends LinearOpMode {
     public int label;
 
     private static final String TFOD_MODEL_ASSET = "NewConeSleeveDetection.tflite";
@@ -43,13 +43,10 @@ public class AutonomousLeft extends LinearOpMode {
 
     boolean state;
 
-    Robot robot;
-
     public void runOpMode() {
         state = true;
         drive = new SampleMecanumDriveCancelable(hardwareMap);
         runtime = new ElapsedTime();
-        robot = new Robot(hardwareMap.get(Servo.class, "intake"), new DcMotor[]{hardwareMap.get(DcMotor.class, "lift1"), hardwareMap.get(DcMotor.class, "lift2")});
 
         Thread autoThread = new AutoThread();
 
@@ -69,7 +66,7 @@ public class AutonomousLeft extends LinearOpMode {
         }
 
         while (opModeIsActive()) {
-            if (runtime.seconds() > 20) {
+            if (runtime.seconds() > 2) {
                 autoThread.interrupt();
                 drive.breakFollowing();
                 drive.setDrivePower(new Pose2d());
@@ -80,34 +77,7 @@ public class AutonomousLeft extends LinearOpMode {
     }
 
     private void runAuto() {
-        robot.intake.grasp(false);
-        //Sleeve Detection
-        while (opModeIsActive() && tfod.getRecognitions().isEmpty()) { }
-
-        ArrayList<Recognition> recognitions = (ArrayList<Recognition>) tfod.getRecognitions();
-
-        if (recognitions != null) {
-            telemetry.addData("Recognitions", recognitions);
-            telemetry.update();
-
-            label = labelToInt(recognitions.get(0).getLabel());
-            telemetry.addData("Color Detected", recognitions.get(0).getLabel());
-            telemetry.update();
-        }
-
-        drive.followTrajectory(right(drive, 24));
-        drive.followTrajectory(forward(drive, 51));
-        drive.followTrajectory(left(drive, 12));
-
-        robot.lift.lift(4);
-        drive.followTrajectory(forward(drive, 5));
-        robot.intake.grasp(true);
-        drive.followTrajectory(backward(drive, 5));
-        robot.lift.lift(0);
-        robot.intake.grasp(false);
-
-        drive.followTrajectory(left(drive, 48));
-        drive.followTrajectory(right(drive, (label - 1)*24));
+        drive.followTrajectory(forward(drive, 40));
     }
 
     private class AutoThread extends Thread {

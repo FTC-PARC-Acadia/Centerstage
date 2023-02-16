@@ -51,7 +51,7 @@ public class Intake {
 
     public void grasp(boolean open) {
         if (open) {
-            position = CLOSED;
+            position = OPEN;
         }
         else {
             position = CLOSED;

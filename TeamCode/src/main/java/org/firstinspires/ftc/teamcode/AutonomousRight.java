@@ -21,8 +21,8 @@ import org.firstinspires.ftc.teamcode.drive.advanced.SampleMecanumDriveCancelabl
 
 import java.util.ArrayList;
 
-@Autonomous(name = "AutonomousLeft", group = "AutoOpModes")
-public class AutonomousLeft extends LinearOpMode {
+@Autonomous(name = "AutonomousRight", group = "AutoOpModes")
+public class AutonomousRight extends LinearOpMode {
     public int label;
 
     private static final String TFOD_MODEL_ASSET = "NewConeSleeveDetection.tflite";
@@ -81,8 +81,12 @@ public class AutonomousLeft extends LinearOpMode {
 
     private void runAuto() {
         robot.intake.grasp(false);
+
         //Sleeve Detection
-        while (opModeIsActive() && tfod.getRecognitions().isEmpty()) { }
+        while (opModeIsActive() && tfod.getRecognitions().isEmpty()) {
+            telemetry.addLine("Hi");
+            telemetry.update();
+        }
 
         ArrayList<Recognition> recognitions = (ArrayList<Recognition>) tfod.getRecognitions();
 
@@ -94,10 +98,9 @@ public class AutonomousLeft extends LinearOpMode {
             telemetry.addData("Color Detected", recognitions.get(0).getLabel());
             telemetry.update();
         }
-
-        drive.followTrajectory(right(drive, 24));
+        drive.followTrajectory(left(drive, 24));
         drive.followTrajectory(forward(drive, 51));
-        drive.followTrajectory(left(drive, 12));
+        drive.followTrajectory(right(drive, 12));
 
         robot.lift.lift(4);
         drive.followTrajectory(forward(drive, 5));
@@ -106,7 +109,7 @@ public class AutonomousLeft extends LinearOpMode {
         robot.lift.lift(0);
         robot.intake.grasp(false);
 
-        drive.followTrajectory(left(drive, 48));
+        drive.followTrajectory(left(drive, 12));
         drive.followTrajectory(right(drive, (label - 1)*24));
     }
 
