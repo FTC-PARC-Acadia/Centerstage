@@ -25,7 +25,7 @@ import java.util.ArrayList;
 public class AutonomousLeft extends LinearOpMode {
     public int label;
 
-    private static final String TFOD_MODEL_ASSET = "NewConeSleeveDetection.tflite";
+    private static final String TFOD_MODEL_ASSET = "ImageRecognition.tflite";
 
     private static final String[] LABELS = {
             "1 green",
