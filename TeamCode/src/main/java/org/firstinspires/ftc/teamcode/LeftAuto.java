@@ -5,7 +5,6 @@ import static org.firstinspires.ftc.teamcode.TrajectoryBuilder.forward;
 import static org.firstinspires.ftc.teamcode.TrajectoryBuilder.left;
 import static org.firstinspires.ftc.teamcode.TrajectoryBuilder.right;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -17,15 +16,15 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import org.firstinspires.ftc.teamcode.drive.advanced.SampleMecanumDriveCancelable;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 import java.util.ArrayList;
 
-@Autonomous(name = "AutoTest", group = "AutoOpModes")
-public class AutoTest extends LinearOpMode {
+@Autonomous(name = "AutoLeft", group = "AutoOpModes")
+public class LeftAuto extends LinearOpMode {
     public int label;
 
-    private static final String TFOD_MODEL_ASSET = "NewConeSleeveDetection.tflite";
+    private static final String TFOD_MODEL_ASSET = "ImageRecognition.tflite";
 
     private static final String[] LABELS = {
             "1 green",
@@ -33,59 +32,58 @@ public class AutoTest extends LinearOpMode {
             "3 purple"
     };
 
-    private static final String VUFORIA_KEY = "AZ6GcV7/////AAABmfVKnUPVmEYUptmw3QQGPrYoGakkYwWd0zW/qAD6t6xQnIEP0joqQnwSb97A4E1E8uNf4f3VeF+KpfB01M2h/NKfHZYkaZMwQPMe0NWZAMJJpeZptIh2B8kD9aLrAyQxb8Mr9oyb5W8D99jkiCecECXqOtkNvC4cvo8iT9c1qtWmuUbOCct4kLPTuQ/SW3VlsjRsruuzOiW9yoo4/XtEZsts0YVdN255mU7xQU9+M8MXbog790+rK4GKwl2JuSpPCC6LhxuvoaX1K2XEJSHR/0OfzsItcNsBh+7lD9NA02EUObjohybJscDPQ8wfCLWgo9BH+KrKM3ZVx3+s42FsXUCYuybMR7um9Xn/pyzKCPvF";
+    private static final String VUFORIA_KEY = "AV9eXtT/////AAABmYHJ5b+iqUHJikZQ1S4jEZV2+BslbZDe7HxZll8H1AcFbWuFyoYARyV/hpU/maiPSylq1iP1RrLFe9F5bV0Y7PQmdo/mnU8RYV3BClJHAWith4j0FY5dB6xC1EHKmiOPg/z8dpQqQPeeOB1sjuw3vlmI9olcK7obEDHhmtHomACdN4jBa2GPdOLnt2C0qlOwR77QnG2IxKCoeOmUsTH/RL/sA5SpMmegiNWczswGUrzBvhHqrm/7mNu+UZQfPEfhTn+DuS15B9z5Fgai9XkjgYwpR639uAMcS0pRr88l94efch5fIM0zL+qgAOTmtGCREB5DhMltSVnLqdZYU50f/6K8FhgoFkzUhoc99KdDijhs";
 
     private VuforiaLocalizer vuforia;
     private TFObjectDetector tfod;
 
     ElapsedTime runtime;
-    SampleMecanumDriveCancelable drive;
+    SampleMecanumDrive drive;
 
     boolean state;
 
-    public void runOpMode() {
-        state = true;
-        drive = new SampleMecanumDriveCancelable(hardwareMap);
-        runtime = new ElapsedTime();
+    Robot robot;
 
-        Thread autoThread = new AutoThread();
+    @Override
+    public void runOpMode() throws InterruptedException {
+        state = true;
+        drive = new SampleMecanumDrive(hardwareMap);
+        runtime = new ElapsedTime();
+        robot = new Robot(hardwareMap.get(Servo.class, "intake"), new DcMotor[]{hardwareMap.get(DcMotor.class, "lift1"), hardwareMap.get(DcMotor.class, "lift2")});
 
         initVuforia();
         initTfod();
 
-        if (tfod != null) {
-            tfod.activate();
-            tfod.setZoom(1.0, 16.0/9.0);
-        }
-
         waitForStart();
-        runtime.reset();
 
-        if (opModeIsActive()) {
-            autoThread.start();
+        robot.intake.grasp(false);
+        //Sleeve Detection
+        while (opModeIsActive() && tfod.getRecognitions().isEmpty()) { }
+
+        ArrayList<Recognition> recognitions = (ArrayList<Recognition>) tfod.getRecognitions();
+
+        if (recognitions != null) {
+            telemetry.addData("Recognitions", recognitions);
+            telemetry.update();
+
+            label = labelToInt(recognitions.get(0).getLabel());
+            telemetry.addData("Color Detected", recognitions.get(0).getLabel());
+            telemetry.update();
         }
 
-        while (opModeIsActive()) {
-            if (runtime.seconds() > 2) {
-                autoThread.interrupt();
-                drive.breakFollowing();
-                drive.setDrivePower(new Pose2d());
-            }
+        drive.followTrajectory(right(drive, 24));
+        drive.followTrajectory(forward(drive, 51));
+        drive.followTrajectory(left(drive, 12));
 
-            drive.update();
-        }
-    }
+        robot.lift.lift(4);
+        drive.followTrajectory(forward(drive, 5));
+        robot.intake.grasp(true);
+        drive.followTrajectory(backward(drive, 5));
+        robot.lift.lift(0);
+        robot.intake.grasp(false);
 
-    private void runAuto() {
-        drive.followTrajectory(forward(drive, 40));
-    }
-
-    private class AutoThread extends Thread {
-        public void run() {
-            while (opModeIsActive() && state) {
-                runAuto();
-            }
-        }
+        drive.followTrajectory(left(drive, 48));
+        drive.followTrajectory(right(drive, (label - 1)*24));
     }
 
     public int labelToInt(String label) {
@@ -116,4 +114,3 @@ public class AutoTest extends LinearOpMode {
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
     }
 }
-

@@ -40,30 +40,30 @@ public class Robot {
         lift.adjust();
     }
 
-    public void getCone() {
-        // opening claw
-        if (!intake.ifOpen()) {
-            intake.grasp(true);
-        }
-
-        //moving forward
-        sampleDrive.followTrajectory(forward(sampleDrive, MOVE_X));
-
-        //moving down
-        lift.liftInches(-MOVE_Y);
-    
-        //closing claw
-        intake.grasp(false);
-        
-        //moving up
-        lift.liftInches(MOVE_Y + CONE_HEIGHT);
-
-        //moving backward
-        sampleDrive.followTrajectory(backward(sampleDrive, MOVE_X));
-        
-        //turning 180˚
-        sampleDrive.turn(180);
-    }
+//    public void getCone() {
+//        // opening claw
+//        if (!intake.ifOpen()) {
+//            intake.grasp(true);
+//        }
+//
+//        //moving forward
+//        sampleDrive.followTrajectory(forward(sampleDrive, MOVE_X));
+//
+//        //moving down
+//        lift.liftInches(-MOVE_Y);
+//
+//        //closing claw
+//        intake.grasp(false);
+//
+//        //moving up
+//        lift.liftInches(MOVE_Y + CONE_HEIGHT);
+//
+//        //moving backward
+//        sampleDrive.followTrajectory(backward(sampleDrive, MOVE_X));
+//
+//        //turning 180˚
+//        sampleDrive.turn(180);
+//    }
 
 }
 

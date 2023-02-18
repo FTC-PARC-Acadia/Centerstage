@@ -17,10 +17,6 @@ public class TeleOpMode extends LinearOpMode {
         waitForStart();
 
         if (opModeIsActive()) {
-            if (gamepad2.x) {
-                robot.getCone();
-            }
-
             while (opModeIsActive() && !gamepad2.x) {
                 robot.run();
 
