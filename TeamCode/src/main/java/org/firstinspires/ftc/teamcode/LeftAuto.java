@@ -54,6 +54,11 @@ public class LeftAuto extends LinearOpMode {
         initVuforia();
         initTfod();
 
+        if (tfod != null) {
+            tfod.activate();
+            tfod.setZoom(1.0, 16.0/9.0);
+        }
+
         waitForStart();
 
         robot.intake.grasp(false);
@@ -72,7 +77,7 @@ public class LeftAuto extends LinearOpMode {
         }
 
         drive.followTrajectory(right(drive, 24));
-        drive.followTrajectory(forward(drive, 51));
+        drive.followTrajectory(forward(drive, 49));
         drive.followTrajectory(left(drive, 12));
 
         robot.lift.lift(4);
@@ -82,8 +87,8 @@ public class LeftAuto extends LinearOpMode {
         robot.lift.lift(0);
         robot.intake.grasp(false);
 
-        drive.followTrajectory(left(drive, 48));
-        drive.followTrajectory(right(drive, (label - 1)*24));
+        drive.followTrajectory(left(drive, 38));
+        drive.followTrajectory(right(drive, (label - 1)*24 + 1));
     }
 
     public int labelToInt(String label) {

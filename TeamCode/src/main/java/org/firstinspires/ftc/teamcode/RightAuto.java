@@ -44,7 +44,6 @@ public class RightAuto extends LinearOpMode {
 
     Robot robot;
 
-    @Override
     public void runOpMode() throws InterruptedException {
         state = true;
         drive = new SampleMecanumDrive(hardwareMap);
@@ -53,6 +52,11 @@ public class RightAuto extends LinearOpMode {
 
         initVuforia();
         initTfod();
+
+        if (tfod != null) {
+            tfod.activate();
+            tfod.setZoom(1.0, 16.0/9.0);
+        }
 
         waitForStart();
 
@@ -75,7 +79,7 @@ public class RightAuto extends LinearOpMode {
             telemetry.update();
         }
         drive.followTrajectory(left(drive, 24));
-        drive.followTrajectory(forward(drive, 51));
+        drive.followTrajectory(forward(drive, 49));
         drive.followTrajectory(right(drive, 12));
 
         robot.lift.lift(4);
@@ -86,7 +90,7 @@ public class RightAuto extends LinearOpMode {
         robot.intake.grasp(false);
 
         drive.followTrajectory(left(drive, 12));
-        drive.followTrajectory(right(drive, (label - 1)*24));
+        drive.followTrajectory(right(drive, (label - 1)*24 + 1));
     }
 
     public int labelToInt(String label) {

@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class Intake {
-    static final double CLOSED = 0.495;
+    static final double CLOSED = 0.49;
     static final double OPEN = 0.52;
 
     private Gamepad gamepad2;
