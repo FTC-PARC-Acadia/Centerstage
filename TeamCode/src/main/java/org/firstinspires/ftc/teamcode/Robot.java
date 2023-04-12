@@ -32,7 +32,10 @@ public class Robot {
         intake = new Intake(claw);
         lift = new Lift(lifts);
     }
-    
+
+    public <T> Robot(Gamepad gamepad1, Gamepad gamepad2, T intake, T lift, T frontLeftDrive, T frontRightDrive, T backLeftDrive, T backRightDrive, T imu) {
+    }
+
     public void run() {
         drive.fieldCentricDrive();
         intake.grab();
