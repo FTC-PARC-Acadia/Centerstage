@@ -1,81 +1,139 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 public class Lift {
     Gamepad gamepad2;
-    DcMotor lift;
+    DcMotor[] lifts;
 
     private int pos = 0;
+    private int min = 50;
+    private final double stepsPerInch = 122.2055;
+    private final int MAX_POS = (int)(33.5 * stepsPerInch);
 
-    public Lift(Gamepad gamepad2, DcMotor lift) {
+
+    public Lift(Gamepad gamepad2, DcMotor[] lifts) {
         this.gamepad2 = gamepad2;
-        this.lift = lift;
+        this.lifts = lifts;
 
-        lift.setDirection(DcMotor.Direction.REVERSE);
-        lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        lift.setTargetPosition(0);
-        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lifts[0].setDirection(DcMotorSimple.Direction.FORWARD);
+        lifts[1].setDirection(DcMotorSimple.Direction.REVERSE);
+
+        for (DcMotor lift : lifts) {
+            lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            lift.setTargetPosition(0);
+            lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        }
     }
 
-    public Lift(DcMotor lift) {
-        this.lift = lift;
+    public Lift(DcMotor[] lifts) {
+        this.lifts = lifts;
 
-        lift.setDirection(DcMotor.Direction.REVERSE);
-        lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        lift.setTargetPosition(0);
-        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lifts[0].setDirection(DcMotorSimple.Direction.FORWARD);
+        lifts[1].setDirection(DcMotorSimple.Direction.REVERSE);
+
+        for (DcMotor lift : lifts) {
+            lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            lift.setTargetPosition(0);
+            lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        }
     }
 
-//    public void liftByLevel() {
-//        int level = pos / 1250;
-//        if (gamepad2.dpad_up && (level < 4) && lift.getCurrentPosition() >= pos - 100) {
-//            pos += 1250;
-//            lift.setTargetPosition(pos);
-//            lift.setPower(1);
-//        } else if (gamepad2.dpad_down && (level > 0) && lift.getCurrentPosition() <= pos + 100) {
-//            pos -= 1250;
-//            lift.setTargetPosition(pos);
-//            lift.setPower(-1);
-//        }
-//    }
+   public void liftByLevel() {
+       int minLevel = (int)(stepsPerInch * 13.5);
+       int interval = (int)(stepsPerInch * 10);
+       int level = (2 * (pos - minLevel) / (MAX_POS - minLevel));
+
+       for(DcMotor lift : lifts){
+           int currentPos = lift.getCurrentPosition();
+           if(gamepad2.left_bumper && (pos < minLevel) && currentPos >= pos - 100){
+               pos = minLevel - currentPos;
+               lift.setTargetPosition(pos);
+               lift.setPower(1);
+
+           }
+           else if (gamepad2.left_bumper && (level < 2) && currentPos >= pos - 100) {
+              pos = minLevel + interval*(level+1);
+              lift.setTargetPosition(pos);
+              lift.setPower(1);
+           }
+           else if (gamepad2.left_trigger > 0.1 && (level > 0) && currentPos <= pos + 100) {
+              pos -= minLevel + interval*(level-1);
+              lift.setTargetPosition(pos);
+              lift.setPower(-1);
+           }
+       }
+   }
+
+    public void liftInches(double inches){
+        int steps = (int)(inches * stepsPerInch);
+        pos += steps;
+
+        for(DcMotor lift : lifts){
+            lift.setTargetPosition(pos);
+            lift.setPower((steps > 0) ? 1 : -1);
+//             if(steps > 0)
+//                 lift.setPower(1);
+//             else
+//                 lift.setPower(-1);
+        }
+    }
 
     public void liftByPush() {
-        if (gamepad2.dpad_up && pos < 5000) {
+        if (gamepad2.dpad_up && pos < 6000) {
+
             pos += 50;
-            lift.setTargetPosition(pos);
-            lift.setPower(1);
-        } else if (gamepad2.dpad_down && pos > 50) {
-            pos -= 50;
-            lift.setTargetPosition(pos);
-            lift.setPower(1);
+            for (DcMotor lift : lifts) {
+                lift.setTargetPosition(pos);
+                lift.setPower(1);
+            }
         }
 
-        if (!lift.isBusy()) {
-            lift.setPower(0);
+        else if (gamepad2.dpad_down && pos > min) {
+            pos -= 50;
+            for (DcMotor lift : lifts) {
+                lift.setTargetPosition(pos);
+                lift.setPower(1);
+            }
+        }
+
+        if (!lifts[0].isBusy() || !lifts[1].isBusy()) {
+            lifts[0].setPower(0);
+            lifts[1].setPower(0);
+        }
+
+        if(gamepad2.b){
+            //reset minimum position
+            min -= 50;
         }
     }
 
     public void adjust() {
-        if (lift.getCurrentPosition() < pos) {
-            lift.setPower(1);
+        if (lifts[0].getCurrentPosition() < pos || lifts[1].getCurrentPosition() < pos) {
+            lifts[0].setPower(1);
+            lifts[1].setPower(1);
         }
     }
 
     public void lift(int level) {
-        pos = level*700;
-        lift.setTargetPosition(pos);
-        lift.setPower(1);
+        pos = level*1000;
 
-        while (lift.isBusy()) {
+        for (DcMotor lift : lifts) {
+            lift.setTargetPosition(pos);
+            lift.setPower(0.75);
+        }
+
+        while (lifts[0].isBusy() && lifts[1].isBusy()) {
 
         }
 
-        if (!lift.isBusy()) {
-            lift.setPower(0);
+        if (!lifts[0].isBusy() && !lifts[1].isBusy()) {
+            lifts[0].setPower(0);
+            lifts[1].setPower(0);
         }
     }
 }

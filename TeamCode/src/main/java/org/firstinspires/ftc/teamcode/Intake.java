@@ -4,13 +4,13 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class Intake {
-    static final double MIN = 0.02;
-    static final double MAX = 0.055;
+    static final double CLOSED = 0.49;
+    static final double OPEN = 0.52;
 
     private Gamepad gamepad2;
     public Servo claw;
 
-    double position = MAX;
+    double position = CLOSED;
 
     int count = 0;
     
@@ -25,10 +25,10 @@ public class Intake {
     
     public void grab(){
         if (gamepad2.a && count > 20) {
-            if (position < MAX) {
-                position = MAX;
+            if (position > CLOSED) {
+                position = CLOSED;
             } else {
-                position = MIN;
+                position = OPEN;
             }
 
             count = 0;
@@ -51,14 +51,18 @@ public class Intake {
 
     public void grasp(boolean open) {
         if (open) {
-            position = MAX;
+            position = OPEN;
         }
         else {
-            position = MIN;
+            position = CLOSED;
         }
 
         for (int i = 0; i < 30; i++) {
             claw.setPosition(position);
         }
+    }
+
+    public boolean ifOpen() {
+        return (position == CLOSED);
     }
 }

@@ -3,17 +3,16 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 public class MecanumDrive {
-    //312 rpm motor
-    public static final double STEP_PER_INCH = 45.285;
-
     //Motor Variables
     public DcMotor frontLeftDrive;
     public DcMotor frontRightDrive;
@@ -21,6 +20,8 @@ public class MecanumDrive {
     public DcMotor backRightDrive;
 
     private Gamepad gamepad1;
+
+    public HardwareMap hardwareMap;
 
     //Power Variables
     private double frontLeftPower;
@@ -39,7 +40,9 @@ public class MecanumDrive {
     BNO055IMU imu;
     Orientation orientation;
 
-    public MecanumDrive(Gamepad gamepad1, DcMotor frontLeftDrive, DcMotor frontRightDrive, DcMotor backLeftDrive, DcMotor backRightDrive, BNO055IMU imu) {
+//    SampleMecanumDrive sampleMecanumDrive;
+
+    public MecanumDrive(Gamepad gamepad1, DcMotor frontLeftDrive, DcMotor frontRightDrive, DcMotor backLeftDrive, DcMotor backRightDrive, BNO055IMU imu, HardwareMap hardwareMap) {
         this.frontLeftDrive = frontLeftDrive;
         this.frontRightDrive = frontRightDrive;
         this.backLeftDrive = backLeftDrive;
@@ -48,6 +51,10 @@ public class MecanumDrive {
         this.gamepad1 = gamepad1;
 
         this.imu = imu;
+
+        this.hardwareMap = hardwareMap;
+
+//        sampleMecanumDrive = new SampleMecanumDrive(hardwareMap);
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -61,81 +68,6 @@ public class MecanumDrive {
         backRightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
-    public MecanumDrive(DcMotor frontLeftDrive, DcMotor frontRightDrive, DcMotor backLeftDrive, DcMotor backRightDrive) {
-        this.frontLeftDrive = frontLeftDrive;
-        this.frontRightDrive = frontRightDrive;
-        this.backLeftDrive = backLeftDrive;
-        this.backRightDrive = backRightDrive;
-
-        frontLeftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontRightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backLeftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backRightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-    }
-
-    public void move(Direction dir, double inches) {
-        frontLeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backLeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        frontLeftDrive.setTargetPosition(0);
-        frontRightDrive.setTargetPosition(0);
-        backLeftDrive.setTargetPosition(0);
-        backRightDrive.setTargetPosition(0);
-
-        frontLeftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        frontRightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backLeftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backRightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        double powerFrontLeftBackRight = 0;
-        double powerFrontRightBackLeft = 0;
-
-        switch(dir) {
-            case FORWARD:
-                powerFrontLeftBackRight = 1;
-                powerFrontRightBackLeft = 1;
-                break;
-
-            case BACKWARD:
-                powerFrontLeftBackRight = -1;
-                powerFrontRightBackLeft = -1;
-                break;
-
-            case RIGHT:
-                powerFrontLeftBackRight = 1;
-                powerFrontRightBackLeft = -1;
-                break;
-
-            case LEFT:
-                powerFrontLeftBackRight = -1;
-                powerFrontRightBackLeft = 1;
-                break;
-        }
-
-        frontLeftDrive.setTargetPosition((int)(-inches*powerFrontLeftBackRight*STEP_PER_INCH));
-        frontRightDrive.setTargetPosition((int)(inches*powerFrontRightBackLeft*STEP_PER_INCH));
-        backLeftDrive.setTargetPosition((int)(-inches*powerFrontRightBackLeft*STEP_PER_INCH));
-        backRightDrive.setTargetPosition((int)(inches*powerFrontLeftBackRight*STEP_PER_INCH));
-
-        frontLeftDrive.setPower(-powerFrontLeftBackRight);
-        frontRightDrive.setPower(powerFrontRightBackLeft);
-        backLeftDrive.setPower(-powerFrontRightBackLeft);
-        backRightDrive.setPower(powerFrontLeftBackRight);
-
-        while (frontLeftDrive.isBusy() && frontRightDrive.isBusy() && backLeftDrive.isBusy() && backRightDrive.isBusy()) {
-
-        }
-
-        if (!frontLeftDrive.isBusy() || !frontRightDrive.isBusy() || !backLeftDrive.isBusy() || !backRightDrive.isBusy()) {
-            frontLeftDrive.setPower(0);
-            frontRightDrive.setPower(0);
-            backLeftDrive.setPower(0);
-            backRightDrive.setPower(0);
-        }
-    }
-
     public void robotCentricDrive() {
         drive(0);
     }
@@ -145,67 +77,54 @@ public class MecanumDrive {
         drive(forwardAngle - orientation.firstAngle);
     }
 
-    boolean doTurn = false;
-    double position = 0;
     int count = 0;
 
     public void drive(double adjustmentAngle) {
-        if(gamepad1.x && count > 5) {
-            doTurn = true;
-            frontLeftDrive.setTargetPosition((int) (9*STEP_PER_INCH) + frontLeftDrive.getCurrentPosition());
-            count = 0;
-        }
+//        if(gamepad1.left_bumper && count > 5) {
+//            sampleMecanumDrive.turn(Math.toRadians(90));
+//            count = 0;
+//        }
+//
+//        if(gamepad1.right_bumper && count > 5) {
+//            sampleMecanumDrive.turn(Math.toRadians(-90));
+//            count = 0;
+//        }
 
         count++;
 
-        if (doTurn) {
-            frontLeftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //Vector Math
+        joystickAngle = gamepad1.left_stick_x < 0 ? Math.atan(gamepad1.left_stick_y/gamepad1.left_stick_x) + Math.PI : Math.atan(gamepad1.left_stick_y/gamepad1.left_stick_x);
+        joystickAngle -= adjustmentAngle;
+        joystickMagnitude = Math.sqrt(Math.pow(gamepad1.left_stick_y, 2) + Math.pow(gamepad1.left_stick_x, 2));
+        turn = gamepad1.right_stick_x;
 
-            frontLeftDrive.setPower(1);
-            frontRightDrive.setPower(1);
-            backLeftDrive.setPower(1);
-            backRightDrive.setPower(1);
+        //Mecanum math, joystick angle and magnitude --> motor power
+        double powerFrontLeftBackRight = (Math.sin(joystickAngle) - Math.cos(joystickAngle)) * joystickMagnitude;
+        double powerFrontRightBackLeft = (-Math.sin(joystickAngle) - Math.cos(joystickAngle)) * joystickMagnitude;
 
-            if (!frontLeftDrive.isBusy()) {
-                doTurn = false;
-            }
-        } else {
-            frontLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-            //Vector Math
-            joystickAngle = gamepad1.left_stick_x < 0 ? Math.atan(gamepad1.left_stick_y/gamepad1.left_stick_x) + Math.PI : Math.atan(gamepad1.left_stick_y/gamepad1.left_stick_x);
-            joystickAngle -= adjustmentAngle;
-            joystickMagnitude = Math.sqrt(Math.pow(gamepad1.left_stick_y, 2) + Math.pow(gamepad1.left_stick_x, 2));
-            turn = gamepad1.right_stick_x;
-
-            //Mecanum math, joystick angle and magnitude --> motor power
-            double powerFrontLeftBackRight = (Math.sin(joystickAngle) - Math.cos(joystickAngle)) * joystickMagnitude;
-            double powerFrontRightBackLeft = (-Math.sin(joystickAngle) - Math.cos(joystickAngle)) * joystickMagnitude;
-
-            if (Double.isNaN(powerFrontLeftBackRight))
-            {
-                powerFrontLeftBackRight = 0D;
-            }
-            if (Double.isNaN(powerFrontRightBackLeft))
-            {
-                powerFrontRightBackLeft = 0D;
-            }
-            if (gamepad1.a)
-            {
-                forwardAngle = orientation.firstAngle;
-            }
-
-            //Combining power and turn
-            frontLeftPower = 0.75*Range.clip(powerFrontLeftBackRight - turn, -1, 1);
-            backRightPower = 0.75*Range.clip((-powerFrontLeftBackRight - turn), -1, 1);
-            frontRightPower = 0.75*Range.clip(powerFrontRightBackLeft - turn, -1, 1);
-            backLeftPower = 0.75*Range.clip((-powerFrontRightBackLeft - turn), -1, 1);
-
-            //Set motor power
-            frontLeftDrive.setPower(frontLeftPower);
-            frontRightDrive.setPower(frontRightPower);
-            backLeftDrive.setPower(backLeftPower);
-            backRightDrive.setPower(backRightPower);
+        if (Double.isNaN(powerFrontLeftBackRight))
+        {
+            powerFrontLeftBackRight = 0D;
         }
+        if (Double.isNaN(powerFrontRightBackLeft))
+        {
+            powerFrontRightBackLeft = 0D;
+        }
+        if (gamepad1.a)
+        {
+            forwardAngle = orientation.firstAngle;
+        }
+
+        //Combining power and turn
+        frontLeftPower = 0.75*Range.clip(powerFrontLeftBackRight - turn, -1, 1);
+        backRightPower = 0.75*Range.clip((-powerFrontLeftBackRight - turn), -1, 1);
+        frontRightPower = 0.75*Range.clip(powerFrontRightBackLeft - turn, -1, 1);
+        backLeftPower = 0.75*Range.clip((-powerFrontRightBackLeft - turn), -1, 1);
+
+        //Set motor power
+        frontLeftDrive.setPower(frontLeftPower);
+        frontRightDrive.setPower(frontRightPower);
+        backLeftDrive.setPower(backLeftPower);
+        backRightDrive.setPower(backRightPower);
     }
 }
