@@ -82,9 +82,9 @@ public class RightAuto extends LinearOpMode {
         drive.followTrajectory(forward(drive, 49));
         drive.followTrajectory(right(drive, 12));
 
+        robot.intake.grasp(true);
         robot.lift.lift(4);
         drive.followTrajectory(forward(drive, 5));
-        robot.intake.grasp(true);
         drive.followTrajectory(backward(drive, 5));
         robot.lift.lift(0);
         robot.intake.grasp(false);
