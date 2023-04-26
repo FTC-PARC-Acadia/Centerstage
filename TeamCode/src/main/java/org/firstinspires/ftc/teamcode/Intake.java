@@ -51,10 +51,10 @@ public class Intake {
 
     public void grasp(boolean open) {
         if (open) {
-            position = OPEN;
+            position = CLOSED;
         }
         else {
-            position = CLOSED;
+            position = OPEN;
         }
 
         for (int i = 0; i < 30; i++) {

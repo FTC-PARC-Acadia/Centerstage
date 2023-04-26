@@ -78,11 +78,11 @@ public class RightAuto extends LinearOpMode {
             telemetry.addData("Color Detected", recognitions.get(0).getLabel());
             telemetry.update();
         }
+        robot.intake.grasp(true);
         drive.followTrajectory(left(drive, 24));
         drive.followTrajectory(forward(drive, 49));
         drive.followTrajectory(right(drive, 12));
 
-        robot.intake.grasp(true);
         robot.lift.lift(4);
         drive.followTrajectory(forward(drive, 5));
         drive.followTrajectory(backward(drive, 5));
