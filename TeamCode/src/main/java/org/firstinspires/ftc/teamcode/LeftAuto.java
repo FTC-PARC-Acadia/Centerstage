@@ -83,9 +83,9 @@ public class LeftAuto extends LinearOpMode {
 
         robot.lift.lift(4);
         drive.followTrajectory(forward(drive, 5));
+        
         drive.followTrajectory(backward(drive, 5));
         robot.lift.lift(0);
-        robot.intake.grasp(false);
 
         drive.followTrajectory(left(drive, 38));
         drive.followTrajectory(right(drive, (label - 1)*24 + 1));
