@@ -26,8 +26,8 @@ public class TeleOpMode extends LinearOpMode {
             while (opModeIsActive() && !gamepad2.x) {
                 robot.run();
 
-                telemetry.addData("Servo Position", robot.intake.claw.getPosition());
-                telemetry.update();
+                //telemetry.addData("Servo Position", robot.intake.claw.getPosition());
+                //telemetry.update();
             }
         }
     }
