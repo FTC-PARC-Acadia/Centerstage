@@ -49,7 +49,7 @@ import java.util.List;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list.
  *
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
- * is explained below. Hello
+ * is explained below.
  */
 @TeleOp(name = "Concept: TensorFlow Object Detection Webcam", group = "Concept")
 public class ConceptTensorFlowObjectDetectionWebcam extends LinearOpMode {
