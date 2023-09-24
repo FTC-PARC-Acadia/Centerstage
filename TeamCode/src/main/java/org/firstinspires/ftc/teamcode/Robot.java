@@ -19,20 +19,20 @@ public class Robot {
     final double CONE_HEIGHT = 5;
     Gamepad gamepad2;
 
-    Intake intake;
-    Lift lift;
+    //Intake intake;
+    //Lift lift;
     MecanumDrive drive;
     SampleMecanumDriveCancelable sampleDrive;
     
     public Robot(Gamepad gamepad1, Gamepad gamepad2, Servo claw, DcMotor[] lifts, DcMotor frontLeftDrive, DcMotor frontRightDrive, DcMotor backLeftDrive, DcMotor backRightDrive, BNO055IMU imu, HardwareMap hardwareMap) {
-        intake = new Intake(gamepad2, claw);
+        //intake = new Intake(gamepad2, claw);
         drive = new MecanumDrive(gamepad1, frontLeftDrive, frontRightDrive, backLeftDrive, backRightDrive, imu, hardwareMap);
-        lift = new Lift(gamepad2, lifts);
+        //lift = new Lift(gamepad2, lifts);
     }
 
     public Robot(Servo claw, DcMotor[] lifts) {
-        intake = new Intake(claw);
-        lift = new Lift(lifts);
+        //intake = new Intake(claw);
+        //lift = new Lift(lifts);
     }
 
     public <T> Robot(Gamepad gamepad1, Gamepad gamepad2, T intake, T lift, T frontLeftDrive, T frontRightDrive, T backLeftDrive, T backRightDrive, T imu) {
