@@ -41,3 +41,7 @@ public class Intake {
     }
 
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 277396966b52ce86115fe9fb13de76ab8cbc52a8
