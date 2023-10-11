@@ -40,9 +40,9 @@ public class Robot {
 
     public void run() {
         drive.fieldCentricDrive();
-        intake.grab();
-        lift.liftByPush();
-        lift.adjust();
+        //intake.grab();
+       // lift.liftByPush();
+       // lift.adjust();
     }
 
 //    public void getCone() {
